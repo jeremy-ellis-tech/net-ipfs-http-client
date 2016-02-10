@@ -1,0 +1,110 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+namespace Ipfs
+{
+    public abstract class IpfsCommand : IDisposable
+    {
+        private static string DefaultAddress = "http://127.0.0.1:5001";
+        private static HttpClient DefaultHttpClient = new HttpClient();
+
+        protected readonly string _address;
+        protected readonly HttpClient _httpClient;
+
+        internal IpfsCommand() : this(DefaultAddress, DefaultHttpClient)
+        {
+
+        }
+
+        internal IpfsCommand(string address) : this(address, DefaultHttpClient)
+        {
+
+        }
+
+        internal IpfsCommand(string address, HttpClient httpClient)
+        {
+            _address = address;
+            _httpClient = httpClient;
+        }
+
+        protected abstract Uri CommandUri { get; }
+
+        protected internal async Task<byte[]> ExecuteAsync(string method, IEnumerable<string> args = null, Dictionary<string,string> flags = null)
+        {
+            if(_disposed)
+            {
+                throw new ObjectDisposedException("IpfsBase");
+            }
+
+            UriBuilder uriBuilder = new UriBuilder(CommandUri);
+            uriBuilder.Path += method;
+
+            bool addArgs = args != null && args.Count() > 0;
+            bool addFlags = flags != null && flags.Count > 0;
+
+            string query = String.Empty;
+
+            if(addArgs)
+            {
+                query += String.Join("&", args.Select(x => String.Format("arg={0}", x)));
+
+                if (addFlags)
+                {
+                    query += "&";
+                }
+            }
+
+            if(addFlags)
+            {
+                query += String.Join("&", flags.Select(x => String.Format("{0}={1}", x.Key, x.Value)));
+            }
+
+            uriBuilder.Query += query;
+
+            Uri queryUri = uriBuilder.Uri;
+
+            Debug.WriteLine(String.Format("Querying: {0}", queryUri.ToString()));
+
+            HttpResponseMessage httpResponse = await _httpClient.GetAsync(queryUri);
+
+            httpResponse.EnsureSuccessStatusCode();
+
+            return await httpResponse.Content.ReadAsByteArrayAsync();
+        }
+
+        /// <summary>
+        /// Helper method to return single value in Enumerable
+        /// </summary>
+        /// <typeparam name="T">The type of the enumerable element</typeparam>
+        /// <param name="value">Element of the singleton enumerable</param>
+        /// <returns>Singleton enumerable</returns>
+        protected IEnumerable<T> Singleton<T>(T value)
+        {
+            yield return value;
+        }
+
+        private bool _disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                if (_httpClient != null) _httpClient.Dispose();
+            }
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+    }
+}
