@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Ipfs
@@ -37,7 +38,7 @@ namespace Ipfs
         {
             if(_disposed)
             {
-                throw new ObjectDisposedException("IpfsBase");
+                throw new ObjectDisposedException("IpfsCommand");
             }
 
             UriBuilder uriBuilder = new UriBuilder(CommandUri);
@@ -74,6 +75,11 @@ namespace Ipfs
             httpResponse.EnsureSuccessStatusCode();
 
             return await httpResponse.Content.ReadAsByteArrayAsync();
+        }
+
+        protected string Utf8Decode(byte[] data)
+        {
+            return Encoding.UTF8.GetString(data, 0, data.Length);
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Ipfs.Json;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -73,9 +75,12 @@ namespace Ipfs.Commands
         /// ipfs swarm peers lists the set of peers this node is connected to.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Peers()
+        public async Task<IList<string>> Peers()
         {
-            return await ExecuteAsync("peers");
+            byte[] ret = await ExecuteAsync("peers");
+            string value = Utf8Decode(ret);
+            SwarmPeers swarmPeers = JsonConvert.DeserializeObject<SwarmPeers>(value);
+            return swarmPeers.Strings;
         }
     }
 }
