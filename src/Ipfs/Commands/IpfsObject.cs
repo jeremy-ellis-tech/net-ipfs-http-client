@@ -46,7 +46,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
         /// <returns></returns>
-        public async Task<byte[]> Data(string key)
+        public async Task<string> Data(string key)
         {
             return await ExecuteAsync("data", ToEnumerable(key));
         }
@@ -60,7 +60,7 @@ namespace Ipfs.Commands
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <param name="encoding">The encoding of the data</param>
         /// <returns></returns>
-        public async Task<byte[]> Get(string key, IpfsEncoding encoding)
+        public async Task<string> Get(string key, IpfsEncoding encoding)
         {
             var flags = new Dictionary<string, string>();
 
@@ -91,7 +91,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
         /// <returns></returns>
-        public async Task<byte[]> Links(string key)
+        public async Task<string> Links(string key)
         {
             return await ExecuteAsync("links", ToEnumerable(key));
         }
@@ -104,7 +104,7 @@ namespace Ipfs.Commands
         /// <param name="data">Data to be stored as a DAG object</param>
         /// <param name="encoding">Encoding type of <data>, either "protobuf" or "json"</param>
         /// <returns></returns>
-        public async Task<byte[]> Put(string data, IpfsEncoding encoding)
+        public async Task<string> Put(string data, IpfsEncoding encoding)
         {
             var flags = new Dictionary<string, string>();
 
@@ -134,7 +134,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <returns></returns>
-        public async Task<byte[]> Stat(string key)
+        public async Task<string> Stat(string key)
         {
             return await ExecuteAsync("stat", ToEnumerable(key));
         }

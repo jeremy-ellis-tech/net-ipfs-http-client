@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Base58.cs" />
     <Compile Include="Commands\IpfsBootstrap.cs" />
     <Compile Include="Commands\IpfsConfig.cs" />
     <Compile Include="Commands\IpfsDht.cs" />
@@ -53,9 +54,12 @@
     <Compile Include="IpfsException.cs" />
     <Compile Include="Commands\IpfsObject.cs" />
     <Compile Include="IpfsLevel.cs" />
+    <Compile Include="IpfsPeerConnectionStatus.cs" />
     <Compile Include="IpfsType.cs" />
     <Compile Include="IpfsVis.cs" />
-    <Compile Include="Json\SwarmPeers.cs" />
+    <Compile Include="Json\IpfsConfigShow.cs" />
+    <Compile Include="MultiAddress.cs" />
+    <Compile Include="MultiHash.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

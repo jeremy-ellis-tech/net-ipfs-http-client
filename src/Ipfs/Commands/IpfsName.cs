@@ -47,7 +47,7 @@ namespace Ipfs.Commands
         /// <param name="name">The IPNS name to publish to. Defaults to your node's peerID</param>
         /// <param name="ipfsPath">IPFS path of the obejct to be published at <name></param>
         /// <returns></returns>
-        public async Task<byte[]> Publish(string name, string ipfsPath)
+        public async Task<string> Publish(string name, string ipfsPath)
         {
             return await ExecuteAsync("publish", ToEnumerable(name, ipfsPath));
         }
@@ -61,7 +61,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="name">The IPNS name to resolve. Defaults to your node's peerID.</param>
         /// <returns></returns>
-        public async Task<byte[]> Resolve(string name)
+        public async Task<string> Resolve(string name)
         {
             return await ExecuteAsync("resolve", ToEnumerable(name));
         }

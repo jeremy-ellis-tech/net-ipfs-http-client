@@ -42,7 +42,7 @@ namespace Ipfs.Commands
         /// Displays the hashes of all local objects.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Local()
+        public async Task<string> Local()
         {
             return await ExecuteAsync("local");
         }

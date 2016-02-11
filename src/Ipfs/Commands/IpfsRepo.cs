@@ -44,7 +44,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="quiet">Write minimal output</param>
         /// <returns></returns>
-        public async Task<byte[]> GC(bool quiet = false)
+        public async Task<string> GC(bool quiet = false)
         {
             var flags = new Dictionary<string, string>();
 

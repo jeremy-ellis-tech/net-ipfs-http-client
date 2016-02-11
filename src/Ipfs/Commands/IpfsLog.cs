@@ -46,7 +46,7 @@ namespace Ipfs.Commands
         /// <param name="subsystem">the subsystem logging identifier. Use 'all' for all subsystems.</param>
         /// <param name="level">one of: debug, info, notice, warning, error, critical</param>
         /// <returns></returns>
-        public async Task<byte[]> Level(string subsystem, IpfsLevel level)
+        public async Task<string> Level(string subsystem, IpfsLevel level)
         {
             string levelValue = null;
 
@@ -82,7 +82,7 @@ namespace Ipfs.Commands
         /// 'ipfs log tail' is a utility command used to read log output as it is written.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Tail()
+        public async Task<string> Tail()
         {
             return await ExecuteAsync("tail");
         }

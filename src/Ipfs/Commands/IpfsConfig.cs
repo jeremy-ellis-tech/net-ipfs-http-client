@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Ipfs.Json;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -43,7 +45,7 @@ namespace Ipfs.Commands
         /// variable set to your preferred text editor.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Edit()
+        public async Task<string> Edit()
         {
             return await ExecuteAsync("edit");
         }
@@ -55,7 +57,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="file">The file to use as the new config</param>
         /// <returns></returns>
-        public async Task<byte[]> Replace(string file)
+        public async Task<string> Replace(string file)
         {
             return await ExecuteAsync("replace", ToEnumerable(file));
         }
@@ -66,9 +68,10 @@ namespace Ipfs.Commands
         /// included in the output of this command.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Show()
+        public async Task<IpfsConfigShow> Show()
         {
-            return await ExecuteAsync("show");
+            string ret = await ExecuteAsync("show");
+            return JsonConvert.DeserializeObject<IpfsConfigShow>(ret);
         }
     }
 }

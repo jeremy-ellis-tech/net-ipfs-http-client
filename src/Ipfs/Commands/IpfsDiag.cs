@@ -70,7 +70,7 @@ namespace Ipfs.Commands
         /// <param name="timeout">diagnostic timeout duration</param>
         /// <param name="vis">output vis. one of: d3, dot</param>
         /// <returns></returns>
-        public async Task<byte[]> Net(string timeout = null, IpfsVis? vis = null)
+        public async Task<string> Net(string timeout = null, IpfsVis? vis = null)
         {
             var flags = new Dictionary<string, string>();
 

@@ -43,7 +43,7 @@ namespace Ipfs.Commands
         /// <param name="ipfsPath">Path to object(s) to be pinned</param>
         /// <param name="recursive">Recursively pin the object linked to by the specified object(s)</param>
         /// <returns></returns>
-        public async Task<byte[]> Add(string ipfsPath, bool recursive = false)
+        public async Task<string> Add(string ipfsPath, bool recursive = false)
         {
             var flags = new Dictionary<string, string>();
 
@@ -62,7 +62,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="type">The type of pinned keys to list. Can be "direct", "indirect", "recursive", or "all". Defaults to "direct"</param>
         /// <returns></returns>
-        public async Task<byte[]> Ls(IpfsType? type = null)
+        public async Task<string> Ls(IpfsType? type = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -102,7 +102,7 @@ namespace Ipfs.Commands
         /// <param name="ipfsPath">Path to object(s) to be unpinned</param>
         /// <param name="recursive">Recursively unpin the object linked to by the specified object(s)</param>
         /// <returns></returns>
-        public async Task<byte[]> Rm(string ipfsPath, bool recursive = false)
+        public async Task<string> Rm(string ipfsPath, bool recursive = false)
         {
             var flags = new Dictionary<string, string>();
 

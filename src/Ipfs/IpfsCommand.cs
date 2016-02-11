@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ipfs
@@ -34,7 +33,14 @@ namespace Ipfs
 
         protected abstract Uri CommandUri { get; }
 
-        protected internal async Task<byte[]> ExecuteAsync(string method, IEnumerable<string> args = null, Dictionary<string,string> flags = null)
+        /// <summary>
+        /// Send a command to the specified IPFS API interface
+        /// </summary>
+        /// <param name="method">The name of the method</param>
+        /// <param name="args">Any arguments</param>
+        /// <param name="flags">Any named parameters</param>
+        /// <returns>The HttpMessageContent (JSON)</returns>
+        protected internal async Task<string> ExecuteAsync(string method, IEnumerable<string> args = null, Dictionary<string,string> flags = null)
         {
             if(_disposed)
             {
@@ -74,12 +80,7 @@ namespace Ipfs
 
             httpResponse.EnsureSuccessStatusCode();
 
-            return await httpResponse.Content.ReadAsByteArrayAsync();
-        }
-
-        protected string Utf8Decode(byte[] data)
-        {
-            return Encoding.UTF8.GetString(data, 0, data.Length);
+            return await httpResponse.Content.ReadAsStringAsync();
         }
 
         /// <summary>

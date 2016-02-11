@@ -41,7 +41,7 @@ namespace Ipfs.Commands
         /// Checks if updates are available
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Check()
+        public async Task<string> Check()
         {
             return await ExecuteAsync("check");
         }
@@ -50,7 +50,7 @@ namespace Ipfs.Commands
         /// List the changelog for the latest versions of IPFS
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Log()
+        public async Task<string> Log()
         {
             return await ExecuteAsync("log");
         }

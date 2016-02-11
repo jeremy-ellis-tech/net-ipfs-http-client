@@ -41,7 +41,7 @@ namespace Ipfs.Commands
         /// Show a list of IPFS Tour topics
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> List()
+        public async Task<string> List()
         {
             return await ExecuteAsync("list");
         }
@@ -50,7 +50,7 @@ namespace Ipfs.Commands
         /// Show the next IPFS Tour topic
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Next()
+        public async Task<string> Next()
         {
             return await ExecuteAsync("next");
         }
@@ -59,7 +59,7 @@ namespace Ipfs.Commands
         /// Restart the IPFS Tour
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Restart()
+        public async Task<string> Restart()
         {
             return await ExecuteAsync("restart");
         }

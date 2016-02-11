@@ -40,7 +40,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="peerID">The peer to search for</param>
         /// <returns></returns>
-        public async Task<byte[]> FindPeer(string peerID)
+        public async Task<string> FindPeer(string peerID)
         {
             return await ExecuteAsync("findpeer", ToEnumerable(peerID));
         }
@@ -52,7 +52,7 @@ namespace Ipfs.Commands
         /// <param name="key">The key to find providers for</param>
         /// <param name="verbose">Write extra information</param>
         /// <returns></returns>
-        public async Task<byte[]> FindProvs(string key, bool verbose = false)
+        public async Task<string> FindProvs(string key, bool verbose = false)
         {
             var flags = new Dictionary<string, string>();
 
@@ -70,7 +70,7 @@ namespace Ipfs.Commands
         /// <param name="peerID">The peerID to run the query against</param>
         /// <param name="verbose">Write extra information</param>
         /// <returns></returns>
-        public async Task<byte[]> Query(string peerID, bool verbose = false)
+        public async Task<string> Query(string peerID, bool verbose = false)
         {
             var flags = new Dictionary<string, string>();
 

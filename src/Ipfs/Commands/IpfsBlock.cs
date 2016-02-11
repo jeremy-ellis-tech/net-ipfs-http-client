@@ -40,7 +40,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">The base58 multihash of an existing block to get</param>
         /// <returns></returns>
-        public async Task<byte[]> Get(string key)
+        public async Task<string> Get(string key)
         {
             return await ExecuteAsync("get", ToEnumerable(key));
         }
@@ -52,7 +52,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="data">The data to be stored as an IPFS block</param>
         /// <returns></returns>
-        public async Task<byte[]> Put(byte[] data)
+        public async Task<string> Put(byte[] data)
         {
             return await ExecuteAsync("put", ToEnumerable(data.ToString()));
         }
@@ -62,7 +62,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">The base58 multihash of an existing block to get</param>
         /// <returns></returns>
-        public async Task<byte[]> Stat(string key)
+        public async Task<string> Stat(string key)
         {
             return await ExecuteAsync("get", ToEnumerable(key));
         }

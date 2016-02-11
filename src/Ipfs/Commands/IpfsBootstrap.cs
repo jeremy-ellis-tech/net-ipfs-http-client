@@ -51,7 +51,7 @@ namespace Ipfs.Commands
         /// <param name="peers">A peer to add to the bootstrap list (in the format '<multiaddr>/<peerID>')</param>
         /// <param name="default">add default bootstrap nodes</param>
         /// <returns></returns>
-        public async Task<byte[]> Add(IEnumerable<string> peers, bool @default = false)
+        public async Task<string> Add(IEnumerable<string> peers, bool @default = false)
         {
             Dictionary<string, string> args = new Dictionary<string, string>();
 
@@ -68,7 +68,7 @@ namespace Ipfs.Commands
         /// Peers are output in the format '<multiaddr>/<peerID>'.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> List()
+        public async Task<string> List()
         {
             return await ExecuteAsync("list");
         }
@@ -87,7 +87,7 @@ namespace Ipfs.Commands
         /// <param name="peers">A peer to add to the bootstrap list (in the format '<multiaddr>/<peerID>')</param>
         /// <param name="all">Remove all bootstrap peers.</param>
         /// <returns></returns>
-        public async Task<byte[]> Rm(IEnumerable<string> peers, bool all = false)
+        public async Task<string> Rm(IEnumerable<string> peers, bool all = false)
         {
             var flags = new Dictionary<string, string>();
 

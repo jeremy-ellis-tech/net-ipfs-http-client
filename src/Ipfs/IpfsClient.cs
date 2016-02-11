@@ -36,7 +36,7 @@ namespace Ipfs
             }
         }
 
-        public async Task<byte[]> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<string> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             var flags = new Dictionary<string, string>();
             
@@ -88,7 +88,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
         /// <returns></returns>
-        public async Task<byte[]> Cat(string ipfsPath)
+        public async Task<string> Cat(string ipfsPath)
         {
             return await ExecuteAsync("cat", ToEnumerable(ipfsPath));
         }
@@ -98,7 +98,7 @@ namespace Ipfs
         /// Lists all available commands (and subcommands) and exits.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> Commands()
+        public async Task<string> Commands()
         {
             return await ExecuteAsync("commands");
         }
@@ -113,7 +113,7 @@ namespace Ipfs
         /// <param name="value">The value to set the config entry to</param>
         /// <param name="bool">Set a boolean value</param>
         /// <returns></returns>
-        public async Task<byte[]> ConfigCommand(string key, string value = null, bool @bool = false)
+        public async Task<string> ConfigCommand(string key, string value = null, bool @bool = false)
         {
             var args = new Dictionary<string, string>();
 
@@ -187,7 +187,7 @@ namespace Ipfs
         /// <param name="compress">Compress the output with GZIP compression</param>
         /// <param name="compressionLevel">The level of compression (1-9)</param>
         /// <returns></returns>
-        public async Task<byte[]> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
+        public async Task<string> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -229,7 +229,7 @@ namespace Ipfs
         /// <param name="peerId">peer.ID of node to look up</param>
         /// <param name="format">optional output format</param>
         /// <returns></returns>
-        public async Task<byte[]> Id(string peerId, string format = null)
+        public async Task<string> Id(string peerId, string format = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -265,7 +265,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
         /// <returns></returns>
-        public async Task<byte[]> Ls(string path)
+        public async Task<string> Ls(string path)
         {
             return await ExecuteAsync("ls", ToEnumerable(path));
         }
@@ -282,7 +282,7 @@ namespace Ipfs
         /// <param name="f">The path where IPFS should be mounted</param>
         /// <param name="n">The path where IPNS should be mounted</param>
         /// <returns></returns>
-        public async Task<byte[]> Mount(string f = null, string n = null)
+        public async Task<string> Mount(string f = null, string n = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -351,7 +351,7 @@ namespace Ipfs
         /// <param name="peerId">ID of peer to be pinged</param>
         /// <param name="count">number of ping messages to send</param>
         /// <returns></returns>
-        public async Task<byte[]> Ping(string peerId, int? count = null)
+        public async Task<string> Ping(string peerId, int? count = null)
         {
             return await ExecuteAsync("ping", ToEnumerable(peerId));
         }
@@ -368,7 +368,7 @@ namespace Ipfs
         /// <param name="unique">Omit duplicate refs from output</param>
         /// <param name="recursive">Recursively list links of child nodes</param>
         /// <returns></returns>
-        public async Task<byte[]> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
+        public async Task<string> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
         {
             var flags = new Dictionary<string, string>();
 
@@ -446,7 +446,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="id">The id of the topic you would like to tour</param>
         /// <returns></returns>
-        public async Task<byte[]> TourCommand(string id)
+        public async Task<string> TourCommand(string id)
         {
             return await ExecuteAsync("tour", ToEnumerable(id));
         }
@@ -471,7 +471,7 @@ namespace Ipfs
         /// ipfs update is a utility command used to check for updates and apply them.
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> UpdateCommand()
+        public async Task<string> UpdateCommand()
         {
             return await ExecuteAsync("update");
         }
@@ -490,7 +490,7 @@ namespace Ipfs
             }
         }
 
-        public async Task<byte[]> Version(bool number = false)
+        public async Task<string> Version(bool number = false)
         {
             return await ExecuteAsync("version");
         }
