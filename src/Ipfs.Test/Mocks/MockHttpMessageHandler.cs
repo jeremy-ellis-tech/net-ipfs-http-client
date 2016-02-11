@@ -9,7 +9,7 @@ namespace Ipfs.Test.Mocks
     {
         private readonly HttpResponseMessage _toReturn;
 
-        public Uri RequestUri { get; private set; }
+        public HttpRequestMessage LastRequest { get; private set; }
 
         public MockHttpMessageHandler(HttpResponseMessage toReturn)
         {
@@ -18,7 +18,7 @@ namespace Ipfs.Test.Mocks
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            RequestUri = request.RequestUri;
+            LastRequest = request;
             return await Task.FromResult(_toReturn);
         }
     }

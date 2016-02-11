@@ -27,7 +27,7 @@ namespace Ipfs.Test
                 client.Commands().Wait();
             }
 
-            Assert.IsTrue(Equals(mockHttpMessageHandler.RequestUri, expectedRequestUri));
+            Assert.IsTrue(Equals(mockHttpMessageHandler.LastRequest.RequestUri, expectedRequestUri));
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Ipfs.Test
                 client.Ls(mockHash).Wait();
             }
 
-            Assert.IsTrue(Equals(mockHttpMessageHandler.RequestUri, expectedRequestUri));
+            Assert.IsTrue(Equals(mockHttpMessageHandler.LastRequest.RequestUri, expectedRequestUri));
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace Ipfs.Test
                 client.Add(mockFileLocation, true, true).Wait();
             }
 
-            Assert.IsTrue(Equals(mockHttpMessageHandler.RequestUri, expectedRequestUri));
+            Assert.IsTrue(Equals(mockHttpMessageHandler.LastRequest.RequestUri, expectedRequestUri));
         }
 
         [TestMethod]
@@ -87,7 +87,7 @@ namespace Ipfs.Test
                 client.Diag.Net("1", IpfsVis.D3).Wait();
             }
 
-            Assert.IsTrue(Equals(mockHttpMessageHandler.RequestUri, expectedRequestUri));
+            Assert.IsTrue(Equals(mockHttpMessageHandler.LastRequest.RequestUri, expectedRequestUri));
         }
     }
 }
