@@ -29,12 +29,30 @@ namespace Ipfs.Commands
                 if (_baseUri == null)
                 {
                     UriBuilder builder = new UriBuilder(_address);
-                    builder.Path += "/api/v0/swarm/";
+                    builder.Path += "/api/v0/update/";
                     _baseUri = builder.Uri;
                 }
 
                 return _baseUri;
             }
+        }
+
+        /// <summary>
+        /// Checks if updates are available
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> Check()
+        {
+            return await ExecuteAsync("check");
+        }
+
+        /// <summary>
+        /// List the changelog for the latest versions of IPFS
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> Log()
+        {
+            return await ExecuteAsync("log");
         }
     }
 }

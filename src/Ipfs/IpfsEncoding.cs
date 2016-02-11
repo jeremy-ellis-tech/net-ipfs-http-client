@@ -1,6 +1,6 @@
 ﻿namespace Ipfs
 {
-    public enum Encoding
+    public enum IpfsEncoding
     {
         Json,
         Protobuf

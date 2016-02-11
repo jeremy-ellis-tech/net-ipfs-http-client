@@ -77,14 +77,17 @@ namespace Ipfs
         }
 
         /// <summary>
-        /// Helper method to return single value in Enumerable
+        /// Helper method to return values in Enumerable
         /// </summary>
-        /// <typeparam name="T">The type of the enumerable element</typeparam>
-        /// <param name="value">Element of the singleton enumerable</param>
-        /// <returns>Singleton enumerable</returns>
-        protected IEnumerable<T> Singleton<T>(T value)
+        /// <typeparam name="T">The type of the enumerable elements</typeparam>
+        /// <param name="values">Element of the singleton enumerable</param>
+        /// <returns>Enumerable containing values</returns>
+        protected IEnumerable<T> ToEnumerable<T>(params T[] values)
         {
-            yield return value;
+            foreach (var value in values)
+            {
+                yield return value;
+            }
         }
 
         private bool _disposed = false;

@@ -36,5 +36,39 @@ namespace Ipfs.Commands
                 return _baseUri;
             }
         }
+
+        /// <summary>
+        /// Opens the config file for editing in $EDITOR
+        /// To use 'ipfs config edit', you must have the $EDITOR environment
+        /// variable set to your preferred text editor.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> Edit()
+        {
+            return await ExecuteAsync("edit");
+        }
+
+        /// <summary>
+        /// Replaces the config with <file>
+        /// Make sure to back up the config file first if neccessary, this operation
+        /// can't be undone.
+        /// </summary>
+        /// <param name="file">The file to use as the new config</param>
+        /// <returns></returns>
+        public async Task<byte[]> Replace(string file)
+        {
+            return await ExecuteAsync("replace", ToEnumerable(file));
+        }
+
+        /// <summary>
+        /// Outputs the content of the config file
+        /// WARNING: Your private key is stored in the config file, and it will be
+        /// included in the output of this command.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> Show()
+        {
+            return await ExecuteAsync("show");
+        }
     }
 }

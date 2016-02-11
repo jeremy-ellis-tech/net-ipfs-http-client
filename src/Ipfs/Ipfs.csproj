@@ -45,15 +45,19 @@
     <Compile Include="Commands\IpfsName.cs" />
     <Compile Include="Commands\IpfsPin.cs" />
     <Compile Include="Commands\IpfsRefs.cs" />
+    <Compile Include="Commands\IpfsRepo.cs" />
     <Compile Include="Commands\IpfsSwarm.cs" />
     <Compile Include="Commands\IpfsTour.cs" />
     <Compile Include="Commands\IpfsUpdate.cs" />
-    <Compile Include="Encoding.cs" />
+    <Compile Include="IpfsEncoding.cs" />
     <Compile Include="IpfsCommand.cs" />
     <Compile Include="Commands\IpfsBlock.cs" />
     <Compile Include="IpfsClient.cs" />
     <Compile Include="IpfsException.cs" />
     <Compile Include="Commands\IpfsObject.cs" />
+    <Compile Include="IpfsLevel.cs" />
+    <Compile Include="IpfsType.cs" />
+    <Compile Include="IpfsVis.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

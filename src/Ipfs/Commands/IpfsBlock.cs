@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -35,34 +34,37 @@ namespace Ipfs.Commands
             }
         }
 
+        /// <summary>
+        /// ipfs block get <key> - Get a raw IPFS block
+        /// 'ipfs block get' is a plumbing command for retreiving raw ipfs blocks.
+        /// </summary>
+        /// <param name="key">The base58 multihash of an existing block to get</param>
+        /// <returns></returns>
         public async Task<byte[]> Get(string key)
         {
-            var args = new Dictionary<string, string>
-            {
-                {"arg", key }
-            };
-
-            return await ExecuteAsync("get");
+            return await ExecuteAsync("get", ToEnumerable(key));
         }
 
+        /// <summary>
+        /// ipfs block put <data> - Stores input as an IPFS block
+        /// ipfs block put is a plumbing command for storing raw ipfs blocks.
+        /// It reads from stdin, and <key> is a base58 encoded multihash.
+        /// </summary>
+        /// <param name="data">The data to be stored as an IPFS block</param>
+        /// <returns></returns>
         public async Task<byte[]> Put(byte[] data)
         {
-            var args = new Dictionary<string, string>
-            {
-                {"arg", data.ToString() }
-            };
-
-            return await ExecuteAsync("get");
+            return await ExecuteAsync("put", ToEnumerable(data.ToString()));
         }
 
+        /// <summary>
+        /// Print information of a raw IPFS block
+        /// </summary>
+        /// <param name="key">The base58 multihash of an existing block to get</param>
+        /// <returns></returns>
         public async Task<byte[]> Stat(string key)
         {
-            var args = new Dictionary<string, string>
-            {
-                {"arg", key }
-            };
-
-            return await ExecuteAsync("get");
+            return await ExecuteAsync("get", ToEnumerable(key));
         }
     }
 }

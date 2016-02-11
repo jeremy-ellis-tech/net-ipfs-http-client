@@ -69,5 +69,25 @@ namespace Ipfs.Test
 
             Assert.IsTrue(Equals(mockHttpMessageHandler.RequestUri, expectedRequestUri));
         }
+
+        [TestMethod]
+        public void RequestUriShouldBeBuiltCorrectlyWithFlagsNoArgs()
+        {
+            var mockResponse = new HttpResponseMessage(HttpStatusCode.OK);
+            mockResponse.Content = new StringContent(String.Empty);
+
+            var mockHttpMessageHandler = new MockHttpMessageHandler(mockResponse);
+
+            string mockAddress = "http://127.0.0.1:5001";
+            string mockFileLocation = @"MyFilePath.txt";
+            string expectedRequestUri = String.Format("{0}/api/v0/diag/net?timeout=1&vis=d3", mockAddress, mockFileLocation);
+
+            using (var client = new IpfsClient(mockAddress, new HttpClient(mockHttpMessageHandler)))
+            {
+                client.Diag.Net("1", IpfsVis.D3).Wait();
+            }
+
+            Assert.IsTrue(Equals(mockHttpMessageHandler.RequestUri, expectedRequestUri));
+        }
     }
 }

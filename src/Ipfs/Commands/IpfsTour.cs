@@ -29,12 +29,39 @@ namespace Ipfs.Commands
                 if (_baseUri == null)
                 {
                     UriBuilder builder = new UriBuilder(_address);
-                    builder.Path += "/api/v0/swarm/";
+                    builder.Path += "/api/v0/tour/";
                     _baseUri = builder.Uri;
                 }
 
                 return _baseUri;
             }
+        }
+
+        /// <summary>
+        /// Show a list of IPFS Tour topics
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> List()
+        {
+            return await ExecuteAsync("list");
+        }
+
+        /// <summary>
+        /// Show the next IPFS Tour topic
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> Next()
+        {
+            return await ExecuteAsync("next");
+        }
+
+        /// <summary>
+        /// Restart the IPFS Tour
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> Restart()
+        {
+            return await ExecuteAsync("restart");
         }
     }
 }

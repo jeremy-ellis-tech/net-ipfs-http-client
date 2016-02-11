@@ -36,5 +36,15 @@ namespace Ipfs.Commands
                 return _baseUri;
             }
         }
+
+        /// <summary>
+        /// Lists all local references
+        /// Displays the hashes of all local objects.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<byte[]> Local()
+        {
+            return await ExecuteAsync("local");
+        }
     }
 }
