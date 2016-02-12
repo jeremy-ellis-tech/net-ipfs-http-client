@@ -7,14 +7,6 @@ namespace Ipfs.Commands
 {
     public class IpfsDiag : IpfsCommand
     {
-        internal IpfsDiag()
-        {
-        }
-
-        internal IpfsDiag(string address) : base(address)
-        {
-        }
-
         internal IpfsDiag(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

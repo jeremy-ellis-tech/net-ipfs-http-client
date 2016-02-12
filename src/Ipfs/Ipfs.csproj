@@ -44,11 +44,12 @@
     <Compile Include="Commands\IpfsPin.cs" />
     <Compile Include="Commands\IpfsRefs.cs" />
     <Compile Include="Commands\IpfsRepo.cs" />
+    <Compile Include="Commands\IpfsRoot.cs" />
     <Compile Include="Commands\IpfsSwarm.cs" />
     <Compile Include="Commands\IpfsTour.cs" />
     <Compile Include="Commands\IpfsUpdate.cs" />
     <Compile Include="IpfsEncoding.cs" />
-    <Compile Include="IpfsCommand.cs" />
+    <Compile Include="Commands\IpfsCommand.cs" />
     <Compile Include="Commands\IpfsBlock.cs" />
     <Compile Include="IpfsClient.cs" />
     <Compile Include="IpfsException.cs" />
@@ -58,6 +59,8 @@
     <Compile Include="IpfsType.cs" />
     <Compile Include="IpfsVis.cs" />
     <Compile Include="Json\IpfsConfigShow.cs" />
+    <Compile Include="Json\IpfsNode.cs" />
+    <Compile Include="MerkleNode.cs" />
     <Compile Include="MultiAddress.cs" />
     <Compile Include="MultiHash.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

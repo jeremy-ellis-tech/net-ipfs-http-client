@@ -9,14 +9,6 @@ namespace Ipfs.Commands
 {
     public class IpfsBootstrap : IpfsCommand
     {
-        internal IpfsBootstrap()
-        {
-        }
-
-        internal IpfsBootstrap(string address) : base(address)
-        {
-        }
-
         internal IpfsBootstrap(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

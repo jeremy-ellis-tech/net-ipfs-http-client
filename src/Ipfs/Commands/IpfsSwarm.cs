@@ -9,14 +9,6 @@ namespace Ipfs.Commands
 {
     public class IpfsSwarm : IpfsCommand
     {
-        internal IpfsSwarm()
-        {
-        }
-
-        internal IpfsSwarm(string address) : base(address)
-        {
-        }
-
         internal IpfsSwarm(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

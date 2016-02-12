@@ -5,25 +5,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Ipfs
+namespace Ipfs.Commands
 {
-    public abstract class IpfsCommand : IDisposable
+    public abstract class IpfsCommand
     {
-        private static string DefaultAddress = "http://127.0.0.1:5001";
-        private static HttpClient DefaultHttpClient = new HttpClient();
-
         protected readonly string _address;
         protected readonly HttpClient _httpClient;
-
-        internal IpfsCommand() : this(DefaultAddress, DefaultHttpClient)
-        {
-
-        }
-
-        internal IpfsCommand(string address) : this(address, DefaultHttpClient)
-        {
-
-        }
 
         internal IpfsCommand(string address, HttpClient httpClient)
         {
@@ -39,14 +26,9 @@ namespace Ipfs
         /// <param name="method">The name of the method</param>
         /// <param name="args">Any arguments</param>
         /// <param name="flags">Any named parameters</param>
-        /// <returns>The HttpMessageContent (JSON)</returns>
+        /// <returns>The HttpMessageContent</returns>
         protected internal async Task<string> ExecuteAsync(string method, IEnumerable<string> args = null, Dictionary<string,string> flags = null)
         {
-            if(_disposed)
-            {
-                throw new ObjectDisposedException("IpfsCommand");
-            }
-
             UriBuilder uriBuilder = new UriBuilder(CommandUri);
             uriBuilder.Path += method;
 
@@ -95,26 +77,6 @@ namespace Ipfs
             {
                 yield return value;
             }
-        }
-
-        private bool _disposed = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed) return;
-
-            if (disposing)
-            {
-                if (_httpClient != null) _httpClient.Dispose();
-            }
-
-            _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

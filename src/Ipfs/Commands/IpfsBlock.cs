@@ -6,14 +6,6 @@ namespace Ipfs.Commands
 {
     public class IpfsBlock : IpfsCommand
     {
-        internal IpfsBlock()
-        {
-        }
-
-        internal IpfsBlock(string address) : base(address)
-        {
-        }
-
         internal IpfsBlock(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

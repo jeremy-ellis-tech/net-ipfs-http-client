@@ -7,14 +7,6 @@ namespace Ipfs.Commands
 {
     public class IpfsRepo : IpfsCommand
     {
-        internal IpfsRepo()
-        {
-        }
-
-        internal IpfsRepo(string address) : base(address)
-        {
-        }
-
         internal IpfsRepo(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

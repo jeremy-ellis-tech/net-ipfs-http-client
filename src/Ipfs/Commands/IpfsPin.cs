@@ -7,14 +7,6 @@ namespace Ipfs.Commands
 {
     public class IpfsPin : IpfsCommand
     {
-        internal IpfsPin()
-        {
-        }
-
-        internal IpfsPin(string address) : base(address)
-        {
-        }
-
         internal IpfsPin(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

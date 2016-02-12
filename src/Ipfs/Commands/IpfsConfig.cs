@@ -11,14 +11,6 @@ namespace Ipfs.Commands
 {
     public class IpfsConfig : IpfsCommand
     {
-        internal IpfsConfig()
-        {
-        }
-
-        internal IpfsConfig(string address) : base(address)
-        {
-        }
-
         internal IpfsConfig(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

@@ -1,4 +1,5 @@
 ﻿using Ipfs.Commands;
+using Ipfs.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -6,58 +7,59 @@ using System.Threading.Tasks;
 
 namespace Ipfs
 {
-    public class IpfsClient : IpfsCommand
+    public class IpfsClient : IDisposable
     {
-        public IpfsClient()
+        private static string DefaultAddress = "http://127.0.0.1:5001";
+        private static HttpClient DefaultHttpClient = new HttpClient();
+
+        private readonly string _address;
+        private readonly HttpClient _httpClient;
+
+        public IpfsClient() : this(DefaultAddress, DefaultHttpClient)
         {
         }
 
-        public IpfsClient(string address) : base(address)
+        public IpfsClient(string address) : this(address, DefaultHttpClient)
         {
         }
 
-        public IpfsClient(string address, HttpClient httpClient) : base(address, httpClient)
+        public IpfsClient(string address, HttpClient httpClient)
         {
+            _address = address;
+            _httpClient = httpClient;
         }
 
-        private Uri _baseUri;
-        protected override Uri CommandUri
+        /// <summary>
+        /// Root commands.
+        /// Gives access to top level commands like 'ipfs add' and 'ipfs cat'
+        /// Also availible at the client level with aliases defined below
+        /// </summary>
+        private IpfsRoot _root;
+        public IpfsRoot Root
         {
             get
             {
-                if (_baseUri == null)
+                EnsureNotDisposed();
+
+                if (_root == null)
                 {
-                    UriBuilder uriBuilder = new UriBuilder(_address);
-                    uriBuilder.Path += "api/v0/";
-                    _baseUri = uriBuilder.Uri;
+                    _root = new IpfsRoot(_address, _httpClient);
                 }
 
-                return _baseUri;
+                return _root;
             }
         }
 
-        public async Task<string> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
-        {
-            var flags = new Dictionary<string, string>();
-            
-            if(recursive)
-            {
-                flags.Add("recursive", "true");
-            }
-
-            if(quiet)
-            {
-                flags.Add("quiet", "true");
-            }
-
-            return await ExecuteAsync("add", ToEnumerable(path), flags);
-        }
-
+        /// <summary>
+        /// Block subcommands
+        /// </summary>
         private IpfsBlock _block;
         public IpfsBlock Block
         {
             get
             {
+                EnsureNotDisposed();
+
                 if (_block == null)
                 {
                     _block = new IpfsBlock(_address, _httpClient);
@@ -67,11 +69,16 @@ namespace Ipfs
             }
         }
 
+        /// <summary>
+        /// Bootstrap subcommands
+        /// </summary>
         private IpfsBootstrap _bootstrap;
         public IpfsBootstrap Bootstrap
         {
             get
             {
+                EnsureNotDisposed();
+
                 if (_bootstrap == null)
                 {
                     _bootstrap = new IpfsBootstrap(_address, _httpClient);
@@ -79,6 +86,254 @@ namespace Ipfs
 
                 return _bootstrap;
             }
+        }
+
+        /// <summary>
+        /// Config subcommands
+        /// </summary>
+        private IpfsConfig _config;
+        public IpfsConfig Config
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_config == null)
+                {
+                    _config = new IpfsConfig(_address, _httpClient);
+                }
+
+                return _config;
+            }
+        }
+
+        /// <summary>
+        /// Dht subcommands
+        /// </summary>
+        private IpfsDht _dht;
+        public IpfsDht Dht
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_dht == null)
+                {
+                    _dht = new IpfsDht(_address, _httpClient);
+                }
+
+                return _dht;
+            }
+        }
+
+        /// <summary>
+        /// Diag subcommands
+        /// </summary>
+        private IpfsDiag _diag;
+        public IpfsDiag Diag
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_diag == null)
+                {
+                    _diag = new IpfsDiag(_address, _httpClient);
+                }
+
+                return _diag;
+            }
+        }
+
+        /// <summary>
+        /// Log subcommands
+        /// </summary>
+        private IpfsLog _log;
+        public IpfsLog Log
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_log == null)
+                {
+                    _log = new IpfsLog(_address, _httpClient);
+                }
+
+                return _log;
+            }
+        }
+
+        /// <summary>
+        /// Name subcommands
+        /// </summary>
+        private IpfsName _name;
+        public IpfsName Name
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_name == null)
+                {
+                    _name = new IpfsName(_address, _httpClient);
+                }
+
+                return _name;
+            }
+        }
+
+        /// <summary>
+        /// Object subcommands
+        /// </summary>
+        private IpfsObject _object;
+        public IpfsObject Object
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_object == null)
+                {
+                    _object = new IpfsObject(_address, _httpClient);
+                }
+
+                return _object;
+            }
+        }
+
+        /// <summary>
+        /// Pin subcommands
+        /// </summary>
+        private IpfsPin _pin;
+        public IpfsPin Pin
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_pin == null)
+                {
+                    _pin = new IpfsPin(_address, _httpClient);
+                }
+
+                return _pin;
+            }
+        }
+
+        /// <summary>
+        /// Refs subcommands
+        /// </summary>
+        private IpfsRefs _refs;
+        public IpfsRefs Refs
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_refs == null)
+                {
+                    _refs = new IpfsRefs(_address, _httpClient);
+                }
+
+                return _refs;
+            }
+        }
+
+        /// <summary>
+        /// Repo subcommands
+        /// </summary>
+        private IpfsRepo _repo;
+        public IpfsRepo Repo
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_repo == null)
+                {
+                    _repo = new IpfsRepo(_address, _httpClient);
+                }
+
+                return _repo;
+            }
+        }
+
+        /// <summary>
+        /// Swarm subcommands
+        /// </summary>
+        private IpfsSwarm _swarm;
+        public IpfsSwarm Swarm
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_swarm == null)
+                {
+                    _swarm = new IpfsSwarm(_address, _httpClient);
+                }
+
+                return _swarm;
+            }
+        }
+
+        /// <summary>
+        /// Tour subcommands
+        /// </summary>
+        private IpfsTour _tour;
+        public IpfsTour Tour
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_tour == null)
+                {
+                    _tour = new IpfsTour(_address, _httpClient);
+                }
+
+                return _tour;
+            }
+        }
+
+        /// <summary>
+        /// Update subcommands
+        /// </summary>
+        private IpfsUpdate _update;
+        public IpfsUpdate Update
+        {
+            get
+            {
+                EnsureNotDisposed();
+
+                if (_update == null)
+                {
+                    _update = new IpfsUpdate(_address, _httpClient);
+                }
+
+                return _update;
+            }
+        }
+
+        #region Root command aliases
+        /// <summary>
+        /// Add an object to ipfs.
+        /// Adds contents of <path> to ipfs. Use -r to add directories.
+        /// Note that directories are added recursively, to form the ipfs
+        /// MerkleDAG.A smarter partial add with a staging area(like git)
+        /// remains to be implemented
+        /// </summary>
+        /// <param name="path">The path to a file to be added to IPFS</param>
+        /// <param name="recursive">Add directory paths recursively</param>
+        /// <param name="quiet">Write minimal output</param>
+        /// <param name="progress">Stream progress data</param>
+        /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
+        /// <param name="trickle">Use trickle-dag format for dag generation</param>
+        /// <returns></returns>
+        public async Task<string> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        {
+            return await Root.Add(path, recursive, quiet, progress, wrapWithDirectory, trickle);
         }
 
         /// <summary>
@@ -90,7 +345,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> Cat(string ipfsPath)
         {
-            return await ExecuteAsync("cat", ToEnumerable(ipfsPath));
+            return await Root.Cat(ipfsPath);
         }
 
         /// <summary>
@@ -100,7 +355,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> Commands()
         {
-            return await ExecuteAsync("commands");
+            return await Root.Commands();
         }
 
         /// <summary>
@@ -115,56 +370,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> ConfigCommand(string key, string value = null, bool @bool = false)
         {
-            var args = new Dictionary<string, string>();
-
-            if(@bool)
-            {
-                args.Add("bool", "true");
-            }
-
-            return await ExecuteAsync("config", ToEnumerable(key, value));
-        }
-
-        private IpfsConfig _config;
-        public IpfsConfig Config
-        {
-            get
-            {
-                if (_config == null)
-                {
-                    _config = new IpfsConfig(_address, _httpClient);
-                }
-
-                return _config;
-            }
-        }
-
-        private IpfsDht _dht;
-        public IpfsDht Dht
-        {
-            get
-            {
-                if (_dht == null)
-                {
-                    _dht = new IpfsDht(_address, _httpClient);
-                }
-
-                return _dht;
-            }
-        }
-
-        private IpfsDiag _diag;
-        public IpfsDiag Diag
-        {
-            get
-            {
-                if (_diag == null)
-                {
-                    _diag = new IpfsDiag(_address, _httpClient);
-                }
-
-                return _diag;
-            }
+            return await Root.ConfigCommand(key, value, @bool);
         }
 
         /// <summary>
@@ -189,29 +395,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
         {
-            var flags = new Dictionary<string, string>();
-
-            if(output != null)
-            {
-                flags.Add("output", output);
-            }
-
-            if(archive)
-            {
-                flags.Add("archive", "true");
-            }
-
-            if(compress)
-            {
-                flags.Add("compress", "true");
-            }
-
-            if(compressionLevel != null)
-            {
-                flags.Add("compressionLevel", compressionLevel.Value.ToString());
-            }
-
-            return await ExecuteAsync("get", ToEnumerable(ipfsPath), flags);
+            return await Root.Get(ipfsPath, output, archive, compress, compressionLevel);
         }
 
         /// <summary>
@@ -231,28 +415,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> Id(string peerId, string format = null)
         {
-            var flags = new Dictionary<string, string>();
-
-            if(format != null)
-            {
-                flags.Add("format", format);
-            }
-
-            return await ExecuteAsync("id", ToEnumerable(peerId), flags);
-        }
-
-        private IpfsLog _log;
-        public IpfsLog Log
-        {
-            get
-            {
-                if (_log == null)
-                {
-                    _log = new IpfsLog(_address, _httpClient);
-                }
-
-                return _log;
-            }
+            return await Root.Id(peerId, format);
         }
 
         /// <summary>
@@ -267,7 +430,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> Ls(string path)
         {
-            return await ExecuteAsync("ls", ToEnumerable(path));
+            return await Root.Ls(path);
         }
 
         /// <summary>
@@ -284,61 +447,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> Mount(string f = null, string n = null)
         {
-            var flags = new Dictionary<string, string>();
-
-            if (f != null)
-            {
-                flags.Add("f", f);
-            }
-
-            if (n != null)
-            {
-                flags.Add("n", n);
-            }
-
-            return await ExecuteAsync("mount");
-        }
-
-        private IpfsName _name;
-        public IpfsName Name
-        {
-            get
-            {
-                if (_name == null)
-                {
-                    _name = new IpfsName(_address, _httpClient);
-                }
-
-                return _name;
-            }
-        }
-
-        private IpfsObject _object;
-        public IpfsObject Object
-        {
-            get
-            {
-                if (_object == null)
-                {
-                    _object = new IpfsObject(_address, _httpClient);
-                }
-
-                return _object;
-            }
-        }
-
-        private IpfsPin _pin;
-        public IpfsPin Pin
-        {
-            get
-            {
-                if (_pin == null)
-                {
-                    _pin = new IpfsPin(_address, _httpClient);
-                }
-
-                return _pin;
-            }
+            return await Root.Mount(f, n);
         }
 
         /// <summary>
@@ -353,7 +462,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> Ping(string peerId, int? count = null)
         {
-            return await ExecuteAsync("ping", ToEnumerable(peerId));
+            return await Root.Ping(peerId, count);
         }
 
         /// <summary>
@@ -370,71 +479,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
         {
-            var flags = new Dictionary<string, string>();
-
-            if(format != null)
-            {
-                flags.Add("format", format);
-            }
-
-            if (edges)
-            {
-                flags.Add("edges", "true");
-            }
-
-            if (unique)
-            {
-                flags.Add("unique", "true");
-            }
-
-            if (recursive)
-            {
-                flags.Add("recursive", "true");
-            }
-
-            return await ExecuteAsync("refs", ToEnumerable(ipfsPath));
-        }
-
-        private IpfsRefs _refs;
-        public IpfsRefs Refs
-        {
-            get
-            {
-                if (_refs == null)
-                {
-                    _refs = new IpfsRefs(_address, _httpClient);
-                }
-
-                return _refs;
-            }
-        }
-
-        private IpfsRepo _repo;
-        public IpfsRepo Repo
-        {
-            get
-            {
-                if (_repo == null)
-                {
-                    _repo = new IpfsRepo(_address, _httpClient);
-                }
-
-                return _repo;
-            }
-        }
-
-        private IpfsSwarm _swarm;
-        public IpfsSwarm Swarm
-        {
-            get
-            {
-                if (_swarm == null)
-                {
-                    _swarm = new IpfsSwarm(_address, _httpClient);
-                }
-
-                return _swarm;
-            }
+            return await Root.RefsCommand(ipfsPath, format, edges, unique, recursive);
         }
 
         /// <summary>
@@ -448,21 +493,7 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> TourCommand(string id)
         {
-            return await ExecuteAsync("tour", ToEnumerable(id));
-        }
-
-        private IpfsTour _tour;
-        public IpfsTour Tour
-        {
-            get
-            {
-                if (_tour == null)
-                {
-                    _tour = new IpfsTour(_address, _httpClient);
-                }
-
-                return _tour;
-            }
+            return await Root.TourCommand(id);
         }
 
         /// <summary>
@@ -473,26 +504,41 @@ namespace Ipfs
         /// <returns></returns>
         public async Task<string> UpdateCommand()
         {
-            return await ExecuteAsync("update");
-        }
-
-        private IpfsUpdate _update;
-        public IpfsUpdate Update
-        {
-            get
-            {
-                if (_update == null)
-                {
-                    _update = new IpfsUpdate(_address, _httpClient);
-                }
-
-                return _update;
-            }
+            return await Root.UpdateCommand();
         }
 
         public async Task<string> Version(bool number = false)
         {
-            return await ExecuteAsync("version");
+            return await Root.Version(number);
+        }
+        #endregion Root command aliases
+
+        private void EnsureNotDisposed()
+        {
+            if(_disposed)
+            {
+                throw new ObjectDisposedException("IpfsClient");
+            }
+        }
+
+        private bool _disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed) return;
+
+            if (disposing)
+            {
+                if (_httpClient != null) _httpClient.Dispose();
+            }
+
+            _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

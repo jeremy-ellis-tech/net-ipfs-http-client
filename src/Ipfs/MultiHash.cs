@@ -10,6 +10,11 @@ namespace Ipfs
 
         public MultiHash(byte[] value)
         {
+            if(value.Length < 2)
+            {
+                throw new ArgumentOutOfRangeException("value");
+            }
+
             Value = value;
         }
 

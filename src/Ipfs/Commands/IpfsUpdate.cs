@@ -1,22 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
 {
     public class IpfsUpdate : IpfsCommand
     {
-        internal IpfsUpdate()
-        {
-        }
-
-        internal IpfsUpdate(string address) : base(address)
-        {
-        }
-
         internal IpfsUpdate(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

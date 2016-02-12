@@ -7,14 +7,6 @@ namespace Ipfs.Commands
 {
     public class IpfsDht : IpfsCommand
     {
-        internal IpfsDht()
-        {
-        }
-
-        internal IpfsDht(string address) : base(address)
-        {
-        }
-
         internal IpfsDht(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }

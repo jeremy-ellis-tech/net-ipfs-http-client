@@ -9,14 +9,6 @@ namespace Ipfs.Commands
 {
     public class IpfsTour : IpfsCommand
     {
-        internal IpfsTour()
-        {
-        }
-
-        internal IpfsTour(string address) : base(address)
-        {
-        }
-
         internal IpfsTour(string address, HttpClient httpClient) : base(address, httpClient)
         {
         }
