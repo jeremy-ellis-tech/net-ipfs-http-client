@@ -3,9 +3,11 @@
 
 _Currently a work in progress_
 
-This library should be easy to use if you're familiar with the IPFS cli. Top level commands (eg. `ipfs cat`, `ipfs add`) are methods in the IPFS client class. Subcommands are methods in the IPFS client's properties named after the subcommands.
+This library should be easy to use if you're familiar with the IPFS cli. Top level commands (eg. `ipfs cat`, `ipfs add`) are methods in `IpfsClient`. Subcommands are methods in the IPFS client's properties named after the subcommands.
 
 ie. `ipfs swarm peers` becomes `ipfs.Swarm.Peers()` and `ipfs add <file>` becomes `ipfs.Add("file")`. Easy!
+
+The only exception is if a valid 'top level' command has subcommands, since C# can't have methods and properties with the same name. ie. `ipfs config` and `ipfs config edit` becomes `ipfs.ConfigCommand()` and `ipfs.Config.Edit()`
 
 ## Examples
 ### Disconnect from all peers
