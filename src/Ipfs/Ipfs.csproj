@@ -58,8 +58,10 @@
     <Compile Include="IpfsPeerConnectionStatus.cs" />
     <Compile Include="IpfsType.cs" />
     <Compile Include="IpfsVis.cs" />
+    <Compile Include="Json\IpfsCommands.cs" />
     <Compile Include="Json\IpfsConfigShow.cs" />
-    <Compile Include="Json\IpfsNode.cs" />
+    <Compile Include="Json\IpfsLs.cs" />
+    <Compile Include="Json\IpfsVersion.cs" />
     <Compile Include="MerkleNode.cs" />
     <Compile Include="MultiAddress.cs" />
     <Compile Include="MultiHash.cs" />

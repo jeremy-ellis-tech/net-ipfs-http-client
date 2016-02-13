@@ -1,11 +1,11 @@
 ﻿using Ipfs.Commands;
 using Ipfs.Json;
+using Ipfs.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Ipfs.Utilities;
-using System.IO;
 
 namespace Ipfs
 {
@@ -444,7 +444,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
         /// <returns></returns>
-        public async Task<HttpContent> Ls(string path)
+        public async Task<IpfsLs> Ls(string path)
         {
             return await Root.Ls(path);
         }
@@ -523,7 +523,7 @@ namespace Ipfs
             return await Root.UpdateCommand();
         }
 
-        public async Task<HttpContent> Version(bool number = false)
+        public async Task<IpfsVersion> Version(bool number = false)
         {
             return await Root.Version(number);
         }

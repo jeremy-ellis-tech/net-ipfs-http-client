@@ -173,9 +173,11 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
         /// <returns></returns>
-        public async Task<HttpContent> Ls(string path)
+        public async Task<IpfsLs> Ls(string path)
         {
-            return await ExecuteAsync("ls", ToEnumerable(path), null);
+            HttpContent content = await ExecuteAsync("ls", ToEnumerable(path), null);
+            string json = await content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IpfsLs>(json);
         }
 
         /// <summary>
@@ -286,9 +288,11 @@ namespace Ipfs.Commands
             return await ExecuteAsync("update", null, null);
         }
 
-        public async Task<HttpContent> Version(bool number = false)
+        public async Task<IpfsVersion> Version(bool number = false)
         {
-            return await ExecuteAsync("version", null, null);
+            HttpContent content = await ExecuteAsync("version", null, null);
+            string json = await content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IpfsVersion>(json);
         }
     }
 }

@@ -2,17 +2,18 @@
 
 namespace Ipfs.Json
 {
-    public class Link
+    public class Node
     {
-        public string Name { get; set; }
         public string Hash { get; set; }
+        public List<Node> Links { get; set; }
+        public string Name { get; set; }
         public int Size { get; set; }
         public int Type { get; set; }
     }
 
-    public class IpfsNode
+    public class IpfsLs
     {
-        public string Hash { get; set; }
-        public IList<Link> Links { get; set; }
+        public List<Node> Objects { get; set; }
     }
+
 }
