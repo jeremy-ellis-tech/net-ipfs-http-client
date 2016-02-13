@@ -4,28 +4,29 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Utilities;
+using System.IO;
 
 namespace Ipfs
 {
     public class IpfsClient : IDisposable
     {
-        private static string DefaultAddress = "http://127.0.0.1:5001";
-        private static HttpClient DefaultHttpClient = new HttpClient();
+        private static readonly Uri DefaultUri = new Uri("http://127.0.0.1:5001");
+        private static readonly HttpClient DefaultHttpClient = new HttpClient();
+        private static readonly string DefaultApiPath = "api/v0";
 
-        private readonly string _address;
+        private readonly Uri _apiUri;
         private readonly HttpClient _httpClient;
 
-        public IpfsClient() : this(DefaultAddress, DefaultHttpClient)
-        {
-        }
+        public IpfsClient() : this(DefaultUri, DefaultHttpClient) { }
 
-        public IpfsClient(string address) : this(address, DefaultHttpClient)
-        {
-        }
+        public IpfsClient(string address) : this(new Uri(address), DefaultHttpClient) { }
 
-        public IpfsClient(string address, HttpClient httpClient)
+        public IpfsClient(Uri address) : this(address, DefaultHttpClient) { }
+
+        public IpfsClient(Uri address, HttpClient httpClient)
         {
-            _address = address;
+            _apiUri = UriHelper.AppendPath(address, DefaultApiPath);
             _httpClient = httpClient;
         }
 
@@ -43,7 +44,7 @@ namespace Ipfs
 
                 if (_root == null)
                 {
-                    _root = new IpfsRoot(_address, _httpClient);
+                    _root = new IpfsRoot(_apiUri, _httpClient);
                 }
 
                 return _root;
@@ -62,7 +63,8 @@ namespace Ipfs
 
                 if (_block == null)
                 {
-                    _block = new IpfsBlock(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "block");
+                    _block = new IpfsBlock(commandUri, _httpClient);
                 }
 
                 return _block;
@@ -81,7 +83,8 @@ namespace Ipfs
 
                 if (_bootstrap == null)
                 {
-                    _bootstrap = new IpfsBootstrap(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "bootstrap");
+                    _bootstrap = new IpfsBootstrap(commandUri, _httpClient);
                 }
 
                 return _bootstrap;
@@ -100,7 +103,8 @@ namespace Ipfs
 
                 if (_config == null)
                 {
-                    _config = new IpfsConfig(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "config");
+                    _config = new IpfsConfig(commandUri, _httpClient);
                 }
 
                 return _config;
@@ -119,7 +123,8 @@ namespace Ipfs
 
                 if (_dht == null)
                 {
-                    _dht = new IpfsDht(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "dht");
+                    _dht = new IpfsDht(commandUri, _httpClient);
                 }
 
                 return _dht;
@@ -138,7 +143,8 @@ namespace Ipfs
 
                 if (_diag == null)
                 {
-                    _diag = new IpfsDiag(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "diag");
+                    _diag = new IpfsDiag(commandUri, _httpClient);
                 }
 
                 return _diag;
@@ -157,7 +163,8 @@ namespace Ipfs
 
                 if (_log == null)
                 {
-                    _log = new IpfsLog(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "log");
+                    _log = new IpfsLog(commandUri, _httpClient);
                 }
 
                 return _log;
@@ -176,7 +183,8 @@ namespace Ipfs
 
                 if (_name == null)
                 {
-                    _name = new IpfsName(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "name");
+                    _name = new IpfsName(commandUri, _httpClient);
                 }
 
                 return _name;
@@ -195,7 +203,8 @@ namespace Ipfs
 
                 if (_object == null)
                 {
-                    _object = new IpfsObject(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "object");
+                    _object = new IpfsObject(commandUri, _httpClient);
                 }
 
                 return _object;
@@ -214,7 +223,8 @@ namespace Ipfs
 
                 if (_pin == null)
                 {
-                    _pin = new IpfsPin(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "pin");
+                    _pin = new IpfsPin(commandUri, _httpClient);
                 }
 
                 return _pin;
@@ -233,7 +243,8 @@ namespace Ipfs
 
                 if (_refs == null)
                 {
-                    _refs = new IpfsRefs(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "refs");
+                    _refs = new IpfsRefs(commandUri, _httpClient);
                 }
 
                 return _refs;
@@ -252,7 +263,8 @@ namespace Ipfs
 
                 if (_repo == null)
                 {
-                    _repo = new IpfsRepo(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "repo");
+                    _repo = new IpfsRepo(commandUri, _httpClient);
                 }
 
                 return _repo;
@@ -271,7 +283,8 @@ namespace Ipfs
 
                 if (_swarm == null)
                 {
-                    _swarm = new IpfsSwarm(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "swarm");
+                    _swarm = new IpfsSwarm(commandUri, _httpClient);
                 }
 
                 return _swarm;
@@ -290,7 +303,8 @@ namespace Ipfs
 
                 if (_tour == null)
                 {
-                    _tour = new IpfsTour(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "tour");
+                    _tour = new IpfsTour(commandUri, _httpClient);
                 }
 
                 return _tour;
@@ -309,7 +323,8 @@ namespace Ipfs
 
                 if (_update == null)
                 {
-                    _update = new IpfsUpdate(_address, _httpClient);
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "update");
+                    _update = new IpfsUpdate(commandUri, _httpClient);
                 }
 
                 return _update;
@@ -317,6 +332,7 @@ namespace Ipfs
         }
 
         #region Root command aliases
+
         /// <summary>
         /// Add an object to ipfs.
         /// Adds contents of <path> to ipfs. Use -r to add directories.
@@ -331,7 +347,7 @@ namespace Ipfs
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<string> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<HttpContent> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             return await Root.Add(path, recursive, quiet, progress, wrapWithDirectory, trickle);
         }
@@ -343,7 +359,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
         /// <returns></returns>
-        public async Task<string> Cat(string ipfsPath)
+        public async Task<Stream> Cat(string ipfsPath)
         {
             return await Root.Cat(ipfsPath);
         }
@@ -353,7 +369,7 @@ namespace Ipfs
         /// Lists all available commands (and subcommands) and exits.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Commands()
+        public async Task<HttpContent> Commands()
         {
             return await Root.Commands();
         }
@@ -368,7 +384,7 @@ namespace Ipfs
         /// <param name="value">The value to set the config entry to</param>
         /// <param name="bool">Set a boolean value</param>
         /// <returns></returns>
-        public async Task<string> ConfigCommand(string key, string value = null, bool @bool = false)
+        public async Task<HttpContent> ConfigCommand(string key, string value = null, bool @bool = false)
         {
             return await Root.ConfigCommand(key, value, @bool);
         }
@@ -393,7 +409,7 @@ namespace Ipfs
         /// <param name="compress">Compress the output with GZIP compression</param>
         /// <param name="compressionLevel">The level of compression (1-9)</param>
         /// <returns></returns>
-        public async Task<string> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
+        public async Task<HttpContent> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
         {
             return await Root.Get(ipfsPath, output, archive, compress, compressionLevel);
         }
@@ -413,7 +429,7 @@ namespace Ipfs
         /// <param name="peerId">peer.ID of node to look up</param>
         /// <param name="format">optional output format</param>
         /// <returns></returns>
-        public async Task<string> Id(string peerId, string format = null)
+        public async Task<HttpContent> Id(string peerId, string format = null)
         {
             return await Root.Id(peerId, format);
         }
@@ -428,7 +444,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
         /// <returns></returns>
-        public async Task<string> Ls(string path)
+        public async Task<HttpContent> Ls(string path)
         {
             return await Root.Ls(path);
         }
@@ -445,7 +461,7 @@ namespace Ipfs
         /// <param name="f">The path where IPFS should be mounted</param>
         /// <param name="n">The path where IPNS should be mounted</param>
         /// <returns></returns>
-        public async Task<string> Mount(string f = null, string n = null)
+        public async Task<HttpContent> Mount(string f = null, string n = null)
         {
             return await Root.Mount(f, n);
         }
@@ -460,7 +476,7 @@ namespace Ipfs
         /// <param name="peerId">ID of peer to be pinged</param>
         /// <param name="count">number of ping messages to send</param>
         /// <returns></returns>
-        public async Task<string> Ping(string peerId, int? count = null)
+        public async Task<HttpContent> Ping(string peerId, int? count = null)
         {
             return await Root.Ping(peerId, count);
         }
@@ -477,7 +493,7 @@ namespace Ipfs
         /// <param name="unique">Omit duplicate refs from output</param>
         /// <param name="recursive">Recursively list links of child nodes</param>
         /// <returns></returns>
-        public async Task<string> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
+        public async Task<HttpContent> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
         {
             return await Root.RefsCommand(ipfsPath, format, edges, unique, recursive);
         }
@@ -491,7 +507,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="id">The id of the topic you would like to tour</param>
         /// <returns></returns>
-        public async Task<string> TourCommand(string id)
+        public async Task<HttpContent> TourCommand(string id)
         {
             return await Root.TourCommand(id);
         }
@@ -502,15 +518,16 @@ namespace Ipfs
         /// ipfs update is a utility command used to check for updates and apply them.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> UpdateCommand()
+        public async Task<HttpContent> UpdateCommand()
         {
             return await Root.UpdateCommand();
         }
 
-        public async Task<string> Version(bool number = false)
+        public async Task<HttpContent> Version(bool number = false)
         {
             return await Root.Version(number);
         }
+
         #endregion Root command aliases
 
         private void EnsureNotDisposed()

@@ -7,25 +7,7 @@ namespace Ipfs.Commands
 {
     public class IpfsDiag : IpfsCommand
     {
-        internal IpfsDiag(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder uriBuilder = new UriBuilder(_address);
-                    uriBuilder.Path += "api/v0/diag/";
-                    _baseUri = uriBuilder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsDiag(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Generates a network diagnostics report
@@ -62,7 +44,7 @@ namespace Ipfs.Commands
         /// <param name="timeout">diagnostic timeout duration</param>
         /// <param name="vis">output vis. one of: d3, dot</param>
         /// <returns></returns>
-        public async Task<string> Net(string timeout = null, IpfsVis? vis = null)
+        public async Task<HttpContent> Net(string timeout = null, IpfsVis? vis = null)
         {
             var flags = new Dictionary<string, string>();
 

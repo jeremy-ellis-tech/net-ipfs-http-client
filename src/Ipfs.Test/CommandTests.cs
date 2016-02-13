@@ -2,6 +2,7 @@
 using Ipfs.Test.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
 
@@ -23,7 +24,7 @@ namespace Ipfs.Test
             string mockAddress = "http://127.0.0.1:5001";
             string expectedRequestUri = String.Format("{0}/api/v0/commands", mockAddress);
 
-            using (var client = new IpfsClient(mockAddress, new HttpClient(mockHttpMessageHandler)))
+            using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
             {
                 client.Commands().Wait();
             }
@@ -43,7 +44,7 @@ namespace Ipfs.Test
             string mockHash = "QmXarR6rgkQ2fDSHjSY5nM2kuCXKYGViky5nohtwgF65Ec";
             string expectedRequestUri = String.Format("{0}/api/v0/ls?arg={1}", mockAddress, mockHash);
 
-            using (var client = new IpfsClient(mockAddress, new HttpClient(mockHttpMessageHandler)))
+            using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
             {
                 client.Ls(mockHash).Wait();
             }
@@ -63,7 +64,7 @@ namespace Ipfs.Test
             string mockFileLocation = @"MyFilePath.txt";
             string expectedRequestUri = String.Format("{0}/api/v0/add?arg={1}&recursive=true&quiet=true", mockAddress, mockFileLocation);
 
-            using (var client = new IpfsClient(mockAddress, new HttpClient(mockHttpMessageHandler)))
+            using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
             {
                 client.Add(mockFileLocation, true, true).Wait();
             }
@@ -83,7 +84,7 @@ namespace Ipfs.Test
             string mockFileLocation = @"MyFilePath.txt";
             string expectedRequestUri = String.Format("{0}/api/v0/diag/net?timeout=1&vis=d3", mockAddress, mockFileLocation);
 
-            using (var client = new IpfsClient(mockAddress, new HttpClient(mockHttpMessageHandler)))
+            using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
             {
                 client.Diag.Net("1", IpfsVis.D3).Wait();
             }

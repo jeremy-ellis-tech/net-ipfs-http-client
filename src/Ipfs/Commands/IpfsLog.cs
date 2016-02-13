@@ -9,25 +9,7 @@ namespace Ipfs.Commands
 {
     public class IpfsLog : IpfsCommand
     {
-        internal IpfsLog(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder uriBuilder = new UriBuilder(_address);
-                    uriBuilder.Path += "api/v0/log/";
-                    _baseUri = uriBuilder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsLog(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Change the logging level
@@ -38,7 +20,7 @@ namespace Ipfs.Commands
         /// <param name="subsystem">the subsystem logging identifier. Use 'all' for all subsystems.</param>
         /// <param name="level">one of: debug, info, notice, warning, error, critical</param>
         /// <returns></returns>
-        public async Task<string> Level(string subsystem, IpfsLevel level)
+        public async Task<HttpContent> Level(string subsystem, IpfsLevel level)
         {
             string levelValue = null;
 
@@ -66,7 +48,7 @@ namespace Ipfs.Commands
                     break;
             }
 
-            return await ExecuteAsync("level", ToEnumerable(subsystem, levelValue));
+            return await ExecuteAsync("level", ToEnumerable(subsystem, levelValue), null);
         }
 
         /// <summary>
@@ -74,9 +56,9 @@ namespace Ipfs.Commands
         /// 'ipfs log tail' is a utility command used to read log output as it is written.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Tail()
+        public async Task<HttpContent> Tail()
         {
-            return await ExecuteAsync("tail");
+            return await ExecuteAsync("tail", null, null);
         }
     }
 }

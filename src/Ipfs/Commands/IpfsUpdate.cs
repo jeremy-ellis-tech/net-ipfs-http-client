@@ -6,42 +6,24 @@ namespace Ipfs.Commands
 {
     public class IpfsUpdate : IpfsCommand
     {
-        internal IpfsUpdate(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder builder = new UriBuilder(_address);
-                    builder.Path += "/api/v0/update/";
-                    _baseUri = builder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsUpdate(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Checks if updates are available
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Check()
+        public async Task<HttpContent> Check()
         {
-            return await ExecuteAsync("check");
+            return await ExecuteAsync("check", null, null);
         }
 
         /// <summary>
         /// List the changelog for the latest versions of IPFS
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Log()
+        public async Task<HttpContent> Log()
         {
-            return await ExecuteAsync("log");
+            return await ExecuteAsync("log", null, null);
         }
     }
 }

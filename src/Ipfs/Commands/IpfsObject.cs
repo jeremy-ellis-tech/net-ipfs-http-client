@@ -9,25 +9,7 @@ namespace Ipfs.Commands
 {
     public class IpfsObject : IpfsCommand
     {
-        internal IpfsObject(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if(_baseUri == null)
-                {
-                    UriBuilder uriBuilder = new UriBuilder(_address);
-                    uriBuilder.Path += "api/v0/object/";
-                    _baseUri = uriBuilder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsObject(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Outputs the raw bytes in an IPFS object
@@ -38,9 +20,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
         /// <returns></returns>
-        public async Task<string> Data(string key)
+        public async Task<HttpContent> Data(string key)
         {
-            return await ExecuteAsync("data", ToEnumerable(key));
+            return await ExecuteAsync("data", ToEnumerable(key), null);
         }
 
         /// <summary>
@@ -52,7 +34,7 @@ namespace Ipfs.Commands
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <param name="encoding">The encoding of the data</param>
         /// <returns></returns>
-        public async Task<string> Get(string key, IpfsEncoding encoding)
+        public async Task<HttpContent> Get(string key, IpfsEncoding encoding)
         {
             var flags = new Dictionary<string, string>();
 
@@ -83,9 +65,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
         /// <returns></returns>
-        public async Task<string> Links(string key)
+        public async Task<HttpContent> Links(string key)
         {
-            return await ExecuteAsync("links", ToEnumerable(key));
+            return await ExecuteAsync("links", ToEnumerable(key), null);
         }
 
         /// <summary>
@@ -96,7 +78,7 @@ namespace Ipfs.Commands
         /// <param name="data">Data to be stored as a DAG object</param>
         /// <param name="encoding">Encoding type of <data>, either "protobuf" or "json"</param>
         /// <returns></returns>
-        public async Task<string> Put(string data, IpfsEncoding encoding)
+        public async Task<HttpContent> Put(string data, IpfsEncoding encoding)
         {
             var flags = new Dictionary<string, string>();
 
@@ -126,9 +108,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <returns></returns>
-        public async Task<string> Stat(string key)
+        public async Task<HttpContent> Stat(string key)
         {
-            return await ExecuteAsync("stat", ToEnumerable(key));
+            return await ExecuteAsync("stat", ToEnumerable(key), null);
         }
     }
 }

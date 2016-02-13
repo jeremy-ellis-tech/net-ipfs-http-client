@@ -11,25 +11,7 @@ namespace Ipfs.Commands
 {
     public class IpfsConfig : IpfsCommand
     {
-        internal IpfsConfig(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder uriBuilder = new UriBuilder(_address);
-                    uriBuilder.Path += "api/v0/config/";
-                    _baseUri = uriBuilder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsConfig(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Opens the config file for editing in $EDITOR
@@ -37,9 +19,9 @@ namespace Ipfs.Commands
         /// variable set to your preferred text editor.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Edit()
+        public async Task<HttpContent> Edit()
         {
-            return await ExecuteAsync("edit");
+            return await ExecuteAsync("edit", null, null);
         }
 
         /// <summary>
@@ -49,9 +31,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="file">The file to use as the new config</param>
         /// <returns></returns>
-        public async Task<string> Replace(string file)
+        public async Task<HttpContent> Replace(string file)
         {
-            return await ExecuteAsync("replace", ToEnumerable(file));
+            return await ExecuteAsync("replace", ToEnumerable(file), null);
         }
 
         /// <summary>
@@ -62,8 +44,9 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<IpfsConfigShow> Show()
         {
-            string ret = await ExecuteAsync("show");
-            return JsonConvert.DeserializeObject<IpfsConfigShow>(ret);
+            HttpContent content = await ExecuteAsync("show", null, null);
+            var json = await content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IpfsConfigShow>(json);
         }
     }
 }

@@ -9,25 +9,7 @@ namespace Ipfs.Commands
 {
     public class IpfsSwarm : IpfsCommand
     {
-        internal IpfsSwarm(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder builder = new UriBuilder(_address);
-                    builder.Path += "/api/v0/swarm/";
-                    _baseUri = builder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsSwarm(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// List known addresses. Useful to debug.
@@ -35,9 +17,9 @@ namespace Ipfs.Commands
         /// ipfs swarm addrs lists all addresses this node is aware of.
         /// </summary>
         /// <returns>all addresses this node is aware of</returns>
-        public async Task<string> Addrs()
+        public async Task<HttpContent> Addrs()
         {
-            return await ExecuteAsync("addrs");
+            return await ExecuteAsync("addrs", null, null);
         }
 
         /// <summary>
@@ -50,9 +32,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="address">address of peer to connect to</param>
         /// <returns></returns>
-        public async Task<string> Connect(string address)
+        public async Task<HttpContent> Connect(string address)
         {
-            return await ExecuteAsync("connect", ToEnumerable(address));
+            return await ExecuteAsync("connect", ToEnumerable(address), null);
         }
 
         /// <summary>
@@ -114,9 +96,11 @@ namespace Ipfs.Commands
         /// <returns>'disconnect <address> successs' on success</returns>
         public async Task<ICollection<IpfsPeerConnectionStatus>> Disconnect(IEnumerable<string> multiAddresses)
         {
-            string ret = await ExecuteAsync("disconnect", multiAddresses);
+            HttpContent content = await ExecuteAsync("disconnect", multiAddresses, null);
 
-            var peerConnectionStatuses = JsonConvert.DeserializeObject<IDictionary<string, IList<string>>>(ret);
+            string json = await content.ReadAsStringAsync();
+
+            var peerConnectionStatuses = JsonConvert.DeserializeObject<IDictionary<string, IList<string>>>(json);
 
             return peerConnectionStatuses
                 .SelectMany(x => x.Value)
@@ -135,8 +119,9 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<ICollection<MultiAddress>> Peers()
         {
-            string ret = await ExecuteAsync("peers");
-            var swarmPeers = JsonConvert.DeserializeObject<IDictionary<string, IList<string>>>(ret);
+            HttpContent content = await ExecuteAsync("peers", null, null);
+            string json = await content.ReadAsStringAsync();
+            var swarmPeers = JsonConvert.DeserializeObject<IDictionary<string, IList<string>>>(json);
             return swarmPeers
                 .SelectMany(x => x.Value)
                 .Select(x => new MultiAddress(x)).ToArray();

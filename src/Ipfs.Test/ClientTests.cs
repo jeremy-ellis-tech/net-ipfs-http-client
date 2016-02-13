@@ -17,7 +17,8 @@ namespace Ipfs.Test
             mockResponse.Content = new StringContent(String.Empty);
 
             var mockHttpMessageHandler = new MockHttpMessageHandler(mockResponse);
-            var client = new IpfsClient(String.Empty, new HttpClient(mockHttpMessageHandler));
+            string mockAddress = "http://127.0.0.1:5001";
+            var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler));
 
             client.Dispose();
 

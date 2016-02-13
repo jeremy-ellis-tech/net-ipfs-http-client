@@ -7,25 +7,7 @@ namespace Ipfs.Commands
 {
     public class IpfsRepo : IpfsCommand
     {
-        internal IpfsRepo(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder builder = new UriBuilder(_address);
-                    builder.Path += "/api/v0/repo/";
-                    _baseUri = builder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsRepo(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Perform a garbage collection sweep on the repo
@@ -36,7 +18,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="quiet">Write minimal output</param>
         /// <returns></returns>
-        public async Task<string> GC(bool quiet = false)
+        public async Task<HttpContent> GC(bool quiet = false)
         {
             var flags = new Dictionary<string, string>();
 

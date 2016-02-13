@@ -5,30 +5,13 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
+using System.IO;
 
 namespace Ipfs.Commands
 {
     public class IpfsRoot : IpfsCommand
     {
-        internal IpfsRoot(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder uriBuilder = new UriBuilder(_address);
-                    uriBuilder.Path += "api/v0/";
-                    _baseUri = uriBuilder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsRoot(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Add an object to ipfs.
@@ -44,7 +27,7 @@ namespace Ipfs.Commands
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<string> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<HttpContent> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             var flags = new Dictionary<string, string>();
 
@@ -68,9 +51,10 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
         /// <returns></returns>
-        public async Task<string> Cat(string ipfsPath)
+        public async Task<Stream> Cat(string ipfsPath)
         {
-            return await ExecuteAsync("cat", ToEnumerable(ipfsPath));
+            HttpContent content = await ExecuteAsync("cat", ToEnumerable(ipfsPath), null);
+            return await content.ReadAsStreamAsync();
         }
 
         /// <summary>
@@ -78,9 +62,9 @@ namespace Ipfs.Commands
         /// Lists all available commands (and subcommands) and exits.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Commands()
+        public async Task<HttpContent> Commands()
         {
-            return await ExecuteAsync("commands");
+            return await ExecuteAsync("commands", null, null);
         }
 
         /// <summary>
@@ -93,7 +77,7 @@ namespace Ipfs.Commands
         /// <param name="value">The value to set the config entry to</param>
         /// <param name="bool">Set a boolean value</param>
         /// <returns></returns>
-        public async Task<string> ConfigCommand(string key, string value = null, bool @bool = false)
+        public async Task<HttpContent> ConfigCommand(string key, string value = null, bool @bool = false)
         {
             var args = new Dictionary<string, string>();
 
@@ -102,7 +86,7 @@ namespace Ipfs.Commands
                 args.Add("bool", "true");
             }
 
-            return await ExecuteAsync("config", ToEnumerable(key, value));
+            return await ExecuteAsync("config", ToEnumerable(key, value), null);
         }
 
         /// <summary>
@@ -125,7 +109,7 @@ namespace Ipfs.Commands
         /// <param name="compress">Compress the output with GZIP compression</param>
         /// <param name="compressionLevel">The level of compression (1-9)</param>
         /// <returns></returns>
-        public async Task<string> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
+        public async Task<HttpContent> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -167,7 +151,7 @@ namespace Ipfs.Commands
         /// <param name="peerId">peer.ID of node to look up</param>
         /// <param name="format">optional output format</param>
         /// <returns></returns>
-        public async Task<string> Id(string peerId, string format = null)
+        public async Task<HttpContent> Id(string peerId, string format = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -189,9 +173,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
         /// <returns></returns>
-        public async Task<string> Ls(string path)
+        public async Task<HttpContent> Ls(string path)
         {
-            return await ExecuteAsync("ls", ToEnumerable(path));
+            return await ExecuteAsync("ls", ToEnumerable(path), null);
         }
 
         /// <summary>
@@ -206,7 +190,7 @@ namespace Ipfs.Commands
         /// <param name="f">The path where IPFS should be mounted</param>
         /// <param name="n">The path where IPNS should be mounted</param>
         /// <returns></returns>
-        public async Task<string> Mount(string f = null, string n = null)
+        public async Task<HttpContent> Mount(string f = null, string n = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -220,7 +204,7 @@ namespace Ipfs.Commands
                 flags.Add("n", n);
             }
 
-            return await ExecuteAsync("mount");
+            return await ExecuteAsync("mount", null, null);
         }
 
         /// <summary>
@@ -233,9 +217,9 @@ namespace Ipfs.Commands
         /// <param name="peerId">ID of peer to be pinged</param>
         /// <param name="count">number of ping messages to send</param>
         /// <returns></returns>
-        public async Task<string> Ping(string peerId, int? count = null)
+        public async Task<HttpContent> Ping(string peerId, int? count = null)
         {
-            return await ExecuteAsync("ping", ToEnumerable(peerId));
+            return await ExecuteAsync("ping", ToEnumerable(peerId), null);
         }
 
         /// <summary>
@@ -250,7 +234,7 @@ namespace Ipfs.Commands
         /// <param name="unique">Omit duplicate refs from output</param>
         /// <param name="recursive">Recursively list links of child nodes</param>
         /// <returns></returns>
-        public async Task<string> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
+        public async Task<HttpContent> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
         {
             var flags = new Dictionary<string, string>();
 
@@ -274,7 +258,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteAsync("refs", ToEnumerable(ipfsPath));
+            return await ExecuteAsync("refs", ToEnumerable(ipfsPath), null);
         }
 
         /// <summary>
@@ -286,9 +270,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="id">The id of the topic you would like to tour</param>
         /// <returns></returns>
-        public async Task<string> TourCommand(string id)
+        public async Task<HttpContent> TourCommand(string id)
         {
-            return await ExecuteAsync("tour", ToEnumerable(id));
+            return await ExecuteAsync("tour", ToEnumerable(id), null);
         }
 
         /// <summary>
@@ -297,14 +281,14 @@ namespace Ipfs.Commands
         /// ipfs update is a utility command used to check for updates and apply them.
         /// </summary>
         /// <returns></returns>
-        public async Task<string> UpdateCommand()
+        public async Task<HttpContent> UpdateCommand()
         {
-            return await ExecuteAsync("update");
+            return await ExecuteAsync("update", null, null);
         }
 
-        public async Task<string> Version(bool number = false)
+        public async Task<HttpContent> Version(bool number = false)
         {
-            return await ExecuteAsync("version");
+            return await ExecuteAsync("version", null, null);
         }
     }
 }

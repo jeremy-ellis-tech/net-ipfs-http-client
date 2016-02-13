@@ -9,51 +9,33 @@ namespace Ipfs.Commands
 {
     public class IpfsTour : IpfsCommand
     {
-        internal IpfsTour(string address, HttpClient httpClient) : base(address, httpClient)
-        {
-        }
-
-        private Uri _baseUri;
-        protected override Uri CommandUri
-        {
-            get
-            {
-                if (_baseUri == null)
-                {
-                    UriBuilder builder = new UriBuilder(_address);
-                    builder.Path += "/api/v0/tour/";
-                    _baseUri = builder.Uri;
-                }
-
-                return _baseUri;
-            }
-        }
+        public IpfsTour(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
         /// <summary>
         /// Show a list of IPFS Tour topics
         /// </summary>
         /// <returns></returns>
-        public async Task<string> List()
+        public async Task<HttpContent> List()
         {
-            return await ExecuteAsync("list");
+            return await ExecuteAsync("list", null, null);
         }
 
         /// <summary>
         /// Show the next IPFS Tour topic
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Next()
+        public async Task<HttpContent> Next()
         {
-            return await ExecuteAsync("next");
+            return await ExecuteAsync("next", null, null);
         }
 
         /// <summary>
         /// Restart the IPFS Tour
         /// </summary>
         /// <returns></returns>
-        public async Task<string> Restart()
+        public async Task<HttpContent> Restart()
         {
-            return await ExecuteAsync("restart");
+            return await ExecuteAsync("restart", null, null);
         }
     }
 }
