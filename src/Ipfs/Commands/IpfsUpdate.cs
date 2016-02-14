@@ -14,7 +14,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Check()
         {
-            return await ExecuteAsync("check", null, null);
+            return await ExecuteGetAsync("check", null, null);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Log()
         {
-            return await ExecuteAsync("log", null, null);
+            return await ExecuteGetAsync("log", null, null);
         }
     }
 }

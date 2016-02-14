@@ -347,9 +347,9 @@ namespace Ipfs
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<HttpContent> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<HttpContent> Add(IDictionary<string,Stream> files, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
-            return await Root.Add(path, recursive, quiet, progress, wrapWithDirectory, trickle);
+            return await Root.Add(files, recursive, quiet, progress, wrapWithDirectory, trickle);
         }
 
         /// <summary>
@@ -369,7 +369,7 @@ namespace Ipfs
         /// Lists all available commands (and subcommands) and exits.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpContent> Commands()
+        public async Task<Json.IpfsCommand> Commands()
         {
             return await Root.Commands();
         }
@@ -444,7 +444,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
         /// <returns></returns>
-        public async Task<IpfsLs> Ls(string path)
+        public async Task<IList<MerkleNode>> Ls(string path)
         {
             return await Root.Ls(path);
         }

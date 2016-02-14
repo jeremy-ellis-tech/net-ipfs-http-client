@@ -34,7 +34,7 @@ namespace Ipfs.Commands
                 args.Add("default", "true");
             }
 
-            return await ExecuteAsync("add", peers, args);
+            return await ExecuteGetAsync("add", peers, args);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> List()
         {
-            return await ExecuteAsync("list", null, null);
+            return await ExecuteGetAsync("list", null, null);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace Ipfs.Commands
                 flags.Add("all", "true");
             }
 
-            return await ExecuteAsync("rm", peers, flags);
+            return await ExecuteGetAsync("rm", peers, flags);
         }
     }
 }

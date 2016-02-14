@@ -2,18 +2,12 @@
 
 namespace Ipfs.Json
 {
-    public class Node
+    public class MerkleNode
     {
         public string Hash { get; set; }
-        public List<Node> Links { get; set; }
+        public List<MerkleNode> Links { get; set; }
         public string Name { get; set; }
         public int Size { get; set; }
         public int Type { get; set; }
     }
-
-    public class IpfsLs
-    {
-        public List<Node> Objects { get; set; }
-    }
-
 }

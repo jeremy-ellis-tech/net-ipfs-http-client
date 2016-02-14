@@ -22,7 +22,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Data(string key)
         {
-            return await ExecuteAsync("data", ToEnumerable(key), null);
+            return await ExecuteGetAsync("data", ToEnumerable(key), null);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Ipfs.Commands
 
             flags.Add("encoding", encodingValue);
 
-            return await ExecuteAsync("get", ToEnumerable(key), flags);
+            return await ExecuteGetAsync("get", ToEnumerable(key), flags);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Links(string key)
         {
-            return await ExecuteAsync("links", ToEnumerable(key), null);
+            return await ExecuteGetAsync("links", ToEnumerable(key), null);
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Ipfs.Commands
 
             flags.Add("encoding", encodingValue);
 
-            return await ExecuteAsync("put", ToEnumerable(data), flags);
+            return await ExecuteGetAsync("put", ToEnumerable(data), flags);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Stat(string key)
         {
-            return await ExecuteAsync("stat", ToEnumerable(key), null);
+            return await ExecuteGetAsync("stat", ToEnumerable(key), null);
         }
     }
 }

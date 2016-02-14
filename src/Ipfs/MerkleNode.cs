@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Ipfs
 {
@@ -18,26 +15,17 @@ namespace Ipfs
             Hash = multiHash;
         }
 
-        public MerkleNode(MultiHash multihash, string name, int size, int type, byte[] data)
-        {
-            Hash = multihash;
-            Name = name;
-            Size = size;
-            Type = type;
-            Data = data;
-        }
-
         public MultiHash Hash { get; private set; }
 
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
-        public int? Size { get; private set; }
+        public int? Size { get; set; }
 
-        public int? Type { get; private set; }
+        public int? Type { get; set; }
 
         public byte[] Data { get; set; }
 
-        public IEnumerable<MultiHash> Links { get; private set; }
+        public IEnumerable<MerkleNode> Links { get; set; }
 
         public bool Equals(MerkleNode other)
         {

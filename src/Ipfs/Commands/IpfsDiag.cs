@@ -72,7 +72,7 @@ namespace Ipfs.Commands
                 flags.Add("vis", visValue);
             }
 
-            return await ExecuteAsync("net", null, flags);
+            return await ExecuteGetAsync("net", null, flags);
         }
     }
 }

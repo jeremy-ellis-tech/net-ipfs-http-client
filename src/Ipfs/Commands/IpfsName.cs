@@ -20,7 +20,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Publish(string name, string ipfsPath)
         {
-            return await ExecuteAsync("publish", ToEnumerable(name, ipfsPath), null);
+            return await ExecuteGetAsync("publish", ToEnumerable(name, ipfsPath), null);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Resolve(string name)
         {
-            return await ExecuteAsync("resolve", ToEnumerable(name), null);
+            return await ExecuteGetAsync("resolve", ToEnumerable(name), null);
         }
     }
 }

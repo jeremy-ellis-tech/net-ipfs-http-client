@@ -27,7 +27,7 @@ namespace Ipfs.Commands
                 flags.Add("quiet", "true");
             }
 
-            return await ExecuteAsync("gc", null, flags);
+            return await ExecuteGetAsync("gc", null, flags);
         }
     }
 }

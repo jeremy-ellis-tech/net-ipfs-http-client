@@ -27,9 +27,12 @@ namespace Ipfs.Commands
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<HttpContent> Add(string path, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<HttpContent> Add(IDictionary<string, Stream> files, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
-            var flags = new Dictionary<string, string>();
+            var flags = new Dictionary<string, string>()
+            {
+                { "stream-channels", "true" }
+            };
 
             if (recursive)
             {
@@ -41,7 +44,7 @@ namespace Ipfs.Commands
                 flags.Add("quiet", "true");
             }
 
-            return await ExecuteAsync("add", ToEnumerable(path), flags);
+            return await ExecutePostAsync("add", null, flags, files);
         }
 
         /// <summary>
@@ -53,7 +56,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<Stream> Cat(string ipfsPath)
         {
-            HttpContent content = await ExecuteAsync("cat", ToEnumerable(ipfsPath), null);
+            HttpContent content = await ExecuteGetAsync("cat", ToEnumerable(ipfsPath), null);
             return await content.ReadAsStreamAsync();
         }
 
@@ -62,9 +65,11 @@ namespace Ipfs.Commands
         /// Lists all available commands (and subcommands) and exits.
         /// </summary>
         /// <returns></returns>
-        public async Task<HttpContent> Commands()
+        public async Task<Json.IpfsCommand> Commands()
         {
-            return await ExecuteAsync("commands", null, null);
+            HttpContent content = await ExecuteGetAsync("commands", null, null);
+            string json = await content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Json.IpfsCommand>(json);
         }
 
         /// <summary>
@@ -86,7 +91,7 @@ namespace Ipfs.Commands
                 args.Add("bool", "true");
             }
 
-            return await ExecuteAsync("config", ToEnumerable(key, value), null);
+            return await ExecuteGetAsync("config", ToEnumerable(key, value), null);
         }
 
         /// <summary>
@@ -133,7 +138,7 @@ namespace Ipfs.Commands
                 flags.Add("compressionLevel", compressionLevel.Value.ToString());
             }
 
-            return await ExecuteAsync("get", ToEnumerable(ipfsPath), flags);
+            return await ExecuteGetAsync("get", ToEnumerable(ipfsPath), flags);
         }
 
         /// <summary>
@@ -160,7 +165,7 @@ namespace Ipfs.Commands
                 flags.Add("format", format);
             }
 
-            return await ExecuteAsync("id", ToEnumerable(peerId), flags);
+            return await ExecuteGetAsync("id", ToEnumerable(peerId), flags);
         }
 
         /// <summary>
@@ -173,11 +178,27 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
         /// <returns></returns>
-        public async Task<IpfsLs> Ls(string path)
+        public async Task<IList<MerkleNode>> Ls(string path)
         {
-            HttpContent content = await ExecuteAsync("ls", ToEnumerable(path), null);
+            HttpContent content = await ExecuteGetAsync("ls", ToEnumerable(path), null);
             string json = await content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IpfsLs>(json);
+            var jsonDict = JsonConvert.DeserializeObject<IDictionary<string, IList<Json.MerkleNode>>>(json);
+            return ToMerkleNodes(jsonDict.SelectMany(x => x.Value)).ToList();
+        }
+
+        private IEnumerable<MerkleNode> ToMerkleNodes(IEnumerable<Json.MerkleNode> nodes)
+        {
+            if (nodes == null) return null;
+
+            return nodes.Select(x =>
+            new MerkleNode(new MultiHash(x.Hash))
+            {
+                Name = x.Name,
+                Size = x.Size,
+                Links = ToMerkleNodes(x.Links),
+                Type = x.Type
+            }
+            );
         }
 
         /// <summary>
@@ -206,7 +227,7 @@ namespace Ipfs.Commands
                 flags.Add("n", n);
             }
 
-            return await ExecuteAsync("mount", null, null);
+            return await ExecuteGetAsync("mount", null, null);
         }
 
         /// <summary>
@@ -221,7 +242,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Ping(string peerId, int? count = null)
         {
-            return await ExecuteAsync("ping", ToEnumerable(peerId), null);
+            return await ExecuteGetAsync("ping", ToEnumerable(peerId), null);
         }
 
         /// <summary>
@@ -260,7 +281,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteAsync("refs", ToEnumerable(ipfsPath), null);
+            return await ExecuteGetAsync("refs", ToEnumerable(ipfsPath), null);
         }
 
         /// <summary>
@@ -274,7 +295,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> TourCommand(string id)
         {
-            return await ExecuteAsync("tour", ToEnumerable(id), null);
+            return await ExecuteGetAsync("tour", ToEnumerable(id), null);
         }
 
         /// <summary>
@@ -285,12 +306,17 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> UpdateCommand()
         {
-            return await ExecuteAsync("update", null, null);
+            return await ExecuteGetAsync("update", null, null);
         }
 
+        /// <summary>
+        /// ipfs version - Shows ipfs version information
+        /// </summary>
+        /// <param name="number">Only show the version number</param>
+        /// <returns>Returns the current version of ipfs and exits.</returns>
         public async Task<IpfsVersion> Version(bool number = false)
         {
-            HttpContent content = await ExecuteAsync("version", null, null);
+            HttpContent content = await ExecuteGetAsync("version", null, null);
             string json = await content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IpfsVersion>(json);
         }

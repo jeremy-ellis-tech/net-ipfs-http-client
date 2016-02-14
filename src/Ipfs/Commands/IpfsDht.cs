@@ -16,7 +16,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> FindPeer(string peerID)
         {
-            return await ExecuteAsync("findpeer", ToEnumerable(peerID), null);
+            return await ExecuteGetAsync("findpeer", ToEnumerable(peerID), null);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Ipfs.Commands
                 flags.Add("verbose", "true");
             }
 
-            return await ExecuteAsync("findprovs", ToEnumerable(key), flags);
+            return await ExecuteGetAsync("findprovs", ToEnumerable(key), flags);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Ipfs.Commands
                 flags.Add("verbose", "true");
             }
 
-            return await ExecuteAsync("findprovs", ToEnumerable(peerID), flags);
+            return await ExecuteGetAsync("findprovs", ToEnumerable(peerID), flags);
         }
     }
 }
