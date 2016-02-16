@@ -11,9 +11,20 @@ namespace Ipfs
 {
     public class IpfsClient : IDisposable
     {
-        private static readonly Uri DefaultUri = new Uri("http://127.0.0.1:5001");
-        private static readonly HttpClient DefaultHttpClient = new HttpClient();
-        private static readonly string DefaultApiPath = "api/v0";
+        private static Uri DefaultUri
+        {
+            get { return new Uri("http://127.0.0.1:5001"); }
+        }
+
+        private static HttpClient DefaultHttpClient
+        {
+            get { return new HttpClient(); }
+        }
+
+        private static string DefaultApiPath
+        {
+            get { return "api/v0"; }
+        }
 
         private readonly Uri _apiUri;
         private readonly HttpClient _httpClient;
