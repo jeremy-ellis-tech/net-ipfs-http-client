@@ -34,7 +34,12 @@ namespace Ipfs
             return httpResponse.Content;
         }
 
-        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, IDictionary<string, Stream> files)
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, Tuple<string, Stream> file)
+        {
+            return await ExecutePostAsync(methodName, args, flags, new List<Tuple<string, Stream>> { file });
+        }
+
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, IEnumerable<Tuple<string, Stream>> files)
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);
 
@@ -44,9 +49,9 @@ namespace Ipfs
 
             foreach (var file in files)
             {
-                StreamContent sc = new StreamContent(file.Value);
+                StreamContent sc = new StreamContent(file.Item2);
                 sc.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                multiContent.Add(sc, "file", file.Key);
+                multiContent.Add(sc, "file", file.Item1);
             }
 
             var httpResponse = await _httpClient.PostAsync(commandUri, multiContent);
@@ -67,12 +72,12 @@ namespace Ipfs
 
             if (args != null && args.Count() > 0)
             {
-                commandUri = UriHelper.AppendQuery(commandUri, args.ToDictionary(x => "arg"));
+                commandUri = UriHelper.AppendQuery(commandUri, args.Select(x=> new Tuple<string,string>("arg", x)));
             }
 
             if (flags != null && flags.Count > 0)
             {
-                commandUri = UriHelper.AppendQuery(commandUri, flags);
+                commandUri = UriHelper.AppendQuery(commandUri, flags.Select(x=> new Tuple<string,string>(x.Key, x.Value)));
             }
 
             return commandUri;

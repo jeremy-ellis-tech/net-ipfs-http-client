@@ -23,12 +23,9 @@ namespace Ipfs.Utilities
             return uriBuilder.Uri;
         }
 
-        public static Uri AppendQuery(Uri baseUri, IDictionary<string,string> args)
+        public static Uri AppendQuery(Uri baseUri, IEnumerable<Tuple<string,string>> args)
         {
-            if(args == null || args.Count <= 0)
-            {
-                return baseUri;
-            }
+            if (args == null || args.Count() <= 0) { return baseUri; }
 
             var uriBuilder = new UriBuilder(baseUri);
 
@@ -39,7 +36,9 @@ namespace Ipfs.Utilities
                 query += "&";
             }
 
-            query += String.Join("&", args.Select(x => String.Format("{0}={1}", x.Key, x.Value)));
+            query += String.Join("&", args
+                .Where(x=>!String.IsNullOrEmpty(x.Item1) && !String.IsNullOrEmpty(x.Item2))
+                .Select(x => String.Format("{0}={1}", x.Item1, x.Item2)));
 
             uriBuilder.Query = query;
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -18,9 +19,12 @@ namespace Ipfs.Commands
         /// <param name="name">The IPNS name to publish to. Defaults to your node's peerID</param>
         /// <param name="ipfsPath">IPFS path of the obejct to be published at <name></param>
         /// <returns></returns>
-        public async Task<HttpContent> Publish(string name, string ipfsPath)
+        public async Task<IpfsNamePublish> Publish(string name, string ipfsPath)
         {
-            return await ExecuteGetAsync("publish", ToEnumerable(name, ipfsPath), null);
+            HttpContent content = await ExecuteGetAsync("publish", ToEnumerable(name, ipfsPath), null);
+            string json = await content.ReadAsStringAsync();
+            Json.IpfsNamePublish ret = JsonConvert.DeserializeObject<Json.IpfsNamePublish>(json);
+            return new IpfsNamePublish { Name = ret.Name, Value = new MultiHash(ret.Value)};
         }
 
         /// <summary>
@@ -32,9 +36,12 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="name">The IPNS name to resolve. Defaults to your node's peerID.</param>
         /// <returns></returns>
-        public async Task<HttpContent> Resolve(string name)
+        public async Task<string> Resolve(string name)
         {
-            return await ExecuteGetAsync("resolve", ToEnumerable(name), null);
+            HttpContent content = await ExecuteGetAsync("resolve", ToEnumerable(name), null);
+            string json = await content.ReadAsStringAsync();
+            Json.IpfsNameResolve resolve = JsonConvert.DeserializeObject<Json.IpfsNameResolve>(json);
+            return resolve.Path;
         }
     }
 }

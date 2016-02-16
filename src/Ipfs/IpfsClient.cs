@@ -333,6 +333,25 @@ namespace Ipfs
 
         #region Root command aliases
 
+        ///// <summary>
+        ///// Add an object to ipfs.
+        ///// Adds contents of <path> to ipfs. Use -r to add directories.
+        ///// Note that directories are added recursively, to form the ipfs
+        ///// MerkleDAG.A smarter partial add with a staging area(like git)
+        ///// remains to be implemented
+        ///// </summary>
+        ///// <param name="path">The path to a file to be added to IPFS</param>
+        ///// <param name="recursive">Add directory paths recursively</param>
+        ///// <param name="quiet">Write minimal output</param>
+        ///// <param name="progress">Stream progress data</param>
+        ///// <param name="wrapWithDirectory">Wrap files with a directory object</param>
+        ///// <param name="trickle">Use trickle-dag format for dag generation</param>
+        ///// <returns></returns>
+        //public async Task<IList<MerkleNode>> Add(IEnumerable<Tuple<string,Stream>> files, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        //{
+        //    return await Root.Add(files, recursive, quiet, progress, wrapWithDirectory, trickle);
+        //}
+
         /// <summary>
         /// Add an object to ipfs.
         /// Adds contents of <path> to ipfs. Use -r to add directories.
@@ -347,9 +366,9 @@ namespace Ipfs
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<HttpContent> Add(IDictionary<string,Stream> files, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(Tuple<string, Stream> file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
-            return await Root.Add(files, recursive, quiet, progress, wrapWithDirectory, trickle);
+            return await Root.Add(file, recursive, quiet, progress, wrapWithDirectory, trickle);
         }
 
         /// <summary>
@@ -429,7 +448,7 @@ namespace Ipfs
         /// <param name="peerId">peer.ID of node to look up</param>
         /// <param name="format">optional output format</param>
         /// <returns></returns>
-        public async Task<HttpContent> Id(string peerId, string format = null)
+        public async Task<IpfsID> Id(string peerId = null, string format = null)
         {
             return await Root.Id(peerId, format);
         }
