@@ -22,7 +22,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Data(string key)
         {
-            return await ExecuteGetAsync("data", ToEnumerable(key), null);
+            return await ExecuteGetAsync("data", key);
         }
 
         /// <summary>
@@ -38,23 +38,9 @@ namespace Ipfs.Commands
         {
             var flags = new Dictionary<string, string>();
 
-            string encodingValue = null;
+            flags.Add("encoding", GetIpfsEncodingValue(encoding));
 
-            switch (encoding)
-            {
-                case IpfsEncoding.Json:
-                    encodingValue = "json";
-                    break;
-                case IpfsEncoding.Protobuf:
-                    encodingValue = "protobuf";
-                    break;
-                default:
-                    break;
-            }
-
-            flags.Add("encoding", encodingValue);
-
-            return await ExecuteGetAsync("get", ToEnumerable(key), flags);
+            return await ExecuteGetAsync("get", key, flags);
         }
 
         /// <summary>
@@ -67,7 +53,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Links(string key)
         {
-            return await ExecuteGetAsync("links", ToEnumerable(key), null);
+            return await ExecuteGetAsync("links", key, null);
         }
 
         /// <summary>
@@ -82,23 +68,9 @@ namespace Ipfs.Commands
         {
             var flags = new Dictionary<string, string>();
 
-            string encodingValue = null;
+            flags.Add("encoding", GetIpfsEncodingValue(encoding));
 
-            switch (encoding)
-            {
-                case IpfsEncoding.Json:
-                    encodingValue = "json";
-                    break;
-                case IpfsEncoding.Protobuf:
-                    encodingValue = "protobuf";
-                    break;
-                default:
-                    break;
-            }
-
-            flags.Add("encoding", encodingValue);
-
-            return await ExecuteGetAsync("put", ToEnumerable(data), flags);
+            return await ExecuteGetAsync("put", data, flags);
         }
 
         /// <summary>
@@ -110,7 +82,20 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Stat(string key)
         {
-            return await ExecuteGetAsync("stat", ToEnumerable(key), null);
+            return await ExecuteGetAsync("stat", key, null);
+        }
+
+        private string GetIpfsEncodingValue(IpfsEncoding encoding)
+        {
+            switch (encoding)
+            {
+                case IpfsEncoding.Json:
+                    return "json";
+                case IpfsEncoding.Protobuf:
+                    return "protobuf";
+                default:
+                    return null;
+            }
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Ipfs.Commands
                     break;
             }
 
-            return await ExecuteGetAsync("level", ToEnumerable(subsystem, levelValue), null);
+            return await ExecuteGetAsync("level", new[] { subsystem, levelValue });
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Tail()
         {
-            return await ExecuteGetAsync("tail", null, null);
+            return await ExecuteGetAsync("tail");
         }
     }
 }

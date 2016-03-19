@@ -21,7 +21,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Edit()
         {
-            return await ExecuteGetAsync("edit", null, null);
+            return await ExecuteGetAsync("edit");
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Replace(string file)
         {
-            return await ExecuteGetAsync("replace", ToEnumerable(file), null);
+            return await ExecuteGetAsync("replace", file);
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<IpfsConfigShow> Show()
         {
-            HttpContent content = await ExecuteGetAsync("show", null, null);
+            HttpContent content = await ExecuteGetAsync("show");
             var json = await content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<IpfsConfigShow>(json);
         }

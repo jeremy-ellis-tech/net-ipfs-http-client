@@ -18,7 +18,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Local()
         {
-            return await ExecuteGetAsync("local", null, null);
+            return await ExecuteGetAsync("local");
         }
     }
 }

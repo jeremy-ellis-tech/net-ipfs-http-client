@@ -16,7 +16,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Get(string key)
         {
-            return await ExecuteGetAsync("get", ToEnumerable(key), null);
+            return await ExecuteGetAsync("get", key, null);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Put(byte[] data)
         {
-            return await ExecuteGetAsync("put", ToEnumerable(data.ToString()), null);
+            return await ExecuteGetAsync("put", data.ToString(), null);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Stat(string key)
         {
-            return await ExecuteGetAsync("get", ToEnumerable(key), null);
+            return await ExecuteGetAsync("get", key);
         }
     }
 }

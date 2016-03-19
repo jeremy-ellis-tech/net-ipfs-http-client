@@ -17,7 +17,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> List()
         {
-            return await ExecuteGetAsync("list", null, null);
+            return await ExecuteGetAsync("list");
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Next()
         {
-            return await ExecuteGetAsync("next", null, null);
+            return await ExecuteGetAsync("next");
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Restart()
         {
-            return await ExecuteGetAsync("restart", null, null);
+            return await ExecuteGetAsync("restart");
         }
     }
 }

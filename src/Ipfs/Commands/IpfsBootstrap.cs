@@ -44,7 +44,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> List()
         {
-            return await ExecuteGetAsync("list", null, null);
+            return await ExecuteGetAsync("list");
         }
 
         /// <summary>

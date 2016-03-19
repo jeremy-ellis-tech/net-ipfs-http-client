@@ -24,7 +24,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Ls(string path)
         {
-            return await ExecuteGetAsync("ls", null, null);
+            return await ExecuteGetAsync("ls");
         }
     }
 }

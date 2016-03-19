@@ -19,7 +19,7 @@ namespace Ipfs.Commands
         /// <returns>IpfsBitSwapStat object</returns>
         public async Task<IpfsBitSwapStat> Stat()
         {
-            HttpContent content = await ExecuteGetAsync("stat", null, null);
+            HttpContent content = await ExecuteGetAsync("stat");
 
             string json = await content.ReadAsStringAsync();
 
@@ -43,7 +43,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Unwant(string key)
         {
-            return await ExecuteGetAsync("unwant", ToEnumerable(key), null);
+            return await ExecuteGetAsync("unwant", key, null);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Ipfs.Commands
                 flags.Add("peer", peer);
             }
 
-            return await ExecuteGetAsync("wantlist", null, flags);
+            return await ExecuteGetAsync("wantlist", flags);
         }
     }
 }

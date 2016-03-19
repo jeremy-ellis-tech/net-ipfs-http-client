@@ -19,6 +19,34 @@ namespace Ipfs
             _httpClient = httpClient;
         }
 
+        #region ExecuteGetAsync() Overrides
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName)
+        {
+            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, null);
+        }
+
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg)
+        {
+            return await ExecuteGetAsync(methodName, ToEnumerable(arg), null);
+        }
+
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IDictionary<string,string> flags)
+        {
+            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, flags);
+        }
+
+
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, IDictionary<string, string> flags)
+        {
+            return await ExecuteGetAsync(methodName, ToEnumerable(arg), flags);
+        }
+
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args)
+        {
+            return await ExecuteGetAsync(methodName, args, null);
+        }
+        #endregion
+
         protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags)
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);

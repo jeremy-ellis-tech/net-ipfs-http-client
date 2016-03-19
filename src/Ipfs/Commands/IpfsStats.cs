@@ -44,7 +44,7 @@ namespace Ipfs.Commands
                 flags.Add("interval", interval);
             }
 
-            HttpContent content = await ExecuteGetAsync("bw", null, flags);
+            HttpContent content = await ExecuteGetAsync("bw", flags);
 
             string json = await content.ReadAsStringAsync();
 

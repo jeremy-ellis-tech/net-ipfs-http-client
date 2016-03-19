@@ -19,7 +19,7 @@ namespace Ipfs.Commands
         /// <returns>all addresses this node is aware of</returns>
         public async Task<HttpContent> Addrs()
         {
-            return await ExecuteGetAsync("addrs", null, null);
+            return await ExecuteGetAsync("addrs");
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Connect(string address)
         {
-            return await ExecuteGetAsync("connect", ToEnumerable(address), null);
+            return await ExecuteGetAsync("connect", address);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<ICollection<MultiAddress>> Peers()
         {
-            HttpContent content = await ExecuteGetAsync("peers", null, null);
+            HttpContent content = await ExecuteGetAsync("peers");
             string json = await content.ReadAsStringAsync();
             var swarmPeers = JsonConvert.DeserializeObject<IDictionary<string, IList<string>>>(json);
             return swarmPeers

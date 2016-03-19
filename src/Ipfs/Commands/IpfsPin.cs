@@ -26,7 +26,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteGetAsync("add", ToEnumerable(ipfsPath), flags);
+            return await ExecuteGetAsync("add", ipfsPath, flags);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Ipfs.Commands
                 flags.Add("type", typeValue);
             }
 
-            return await ExecuteGetAsync("ls", null, flags);
+            return await ExecuteGetAsync("ls", flags);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteGetAsync("rm", ToEnumerable(ipfsPath), flags);
+            return await ExecuteGetAsync("rm", ipfsPath, flags);
         }
     }
 }

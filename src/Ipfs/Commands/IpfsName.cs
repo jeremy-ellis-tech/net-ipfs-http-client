@@ -17,11 +17,11 @@ namespace Ipfs.Commands
         /// default value of<name> is your own identity public key.
         /// </summary>
         /// <param name="name">The IPNS name to publish to. Defaults to your node's peerID</param>
-        /// <param name="ipfsPath">IPFS path of the obejct to be published at <name></param>
+        /// <param name="ipfsPath">IPFS path of the obejct to be published at <name> </param>
         /// <returns></returns>
         public async Task<IpfsNamePublish> Publish(string name, string ipfsPath)
         {
-            HttpContent content = await ExecuteGetAsync("publish", ToEnumerable(name, ipfsPath), null);
+            HttpContent content = await ExecuteGetAsync("publish", new[] { name, ipfsPath });
             string json = await content.ReadAsStringAsync();
             Json.IpfsNamePublish ret = JsonConvert.DeserializeObject<Json.IpfsNamePublish>(json);
             return new IpfsNamePublish { Name = ret.Name, Value = new MultiHash(ret.Value)};
@@ -38,7 +38,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<string> Resolve(string name)
         {
-            HttpContent content = await ExecuteGetAsync("resolve", ToEnumerable(name), null);
+            HttpContent content = await ExecuteGetAsync("resolve", name);
             string json = await content.ReadAsStringAsync();
             Json.IpfsNameResolve resolve = JsonConvert.DeserializeObject<Json.IpfsNameResolve>(json);
             return resolve.Path;
