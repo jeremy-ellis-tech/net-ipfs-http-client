@@ -35,7 +35,6 @@ namespace Ipfs
             return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, flags);
         }
 
-
         protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, IDictionary<string, string> flags)
         {
             return await ExecuteGetAsync(methodName, ToEnumerable(arg), flags);
@@ -107,7 +106,7 @@ namespace Ipfs
         /// <typeparam name="T">The type of the enumerable elements</typeparam>
         /// <param name="values">Element of the singleton enumerable</param>
         /// <returns>Enumerable containing values</returns>
-        protected IEnumerable<T> ToEnumerable<T>(params T[] values)
+        protected static IEnumerable<T> ToEnumerable<T>(params T[] values)
         {
             foreach (var value in values)
             {

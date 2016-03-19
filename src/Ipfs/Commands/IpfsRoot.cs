@@ -14,44 +14,6 @@ namespace Ipfs.Commands
     {
         public IpfsRoot(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
 
-        ///// <summary>
-        ///// Add an object to ipfs.
-        ///// Adds contents of <path> to ipfs. Use -r to add directories.
-        ///// Note that directories are added recursively, to form the ipfs
-        ///// MerkleDAG.A smarter partial add with a staging area(like git)
-        ///// remains to be implemented
-        ///// </summary>
-        ///// <param name="path">The path to a file to be added to IPFS</param>
-        ///// <param name="recursive">Add directory paths recursively</param>
-        ///// <param name="quiet">Write minimal output</param>
-        ///// <param name="progress">Stream progress data</param>
-        ///// <param name="wrapWithDirectory">Wrap files with a directory object</param>
-        ///// <param name="trickle">Use trickle-dag format for dag generation</param>
-        ///// <returns></returns>
-        //public async Task<IList<MerkleNode>> Add(IEnumerable<Tuple<string, Stream>> files, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
-        //{
-        //    var flags = new Dictionary<string, string>()
-        //    {
-        //        { "stream-channels", "true" }
-        //    };
-
-        //    if (recursive)
-        //    {
-        //        flags.Add("recursive", "true");
-        //    }
-
-        //    if (quiet)
-        //    {
-        //        flags.Add("quiet", "true");
-        //    }
-
-        //    HttpContent content = await ExecutePostAsync("add", null, flags, files);
-
-        //    string json = await content.ReadAsStringAsync();
-
-        //    return JsonConvert.DeserializeObject<List<IpfsAdd>>("{[ " + json + " ]}").Select(x => new MerkleNode(new MultiHash(x.Hash)) { Name = x.Name }).ToList();
-        //}
-
         /// <summary>
         /// Add an object to ipfs.
         /// Adds contents of <path> to ipfs. Use -r to add directories.
@@ -59,13 +21,13 @@ namespace Ipfs.Commands
         /// MerkleDAG.A smarter partial add with a staging area(like git)
         /// remains to be implemented
         /// </summary>
-        /// <param name="path">The path to a file to be added to IPFS</param>
+        /// <param name="file">A named stream of the file. ie. A stream pointing to the file to be added and it's name as a string.</param>
         /// <param name="recursive">Add directory paths recursively</param>
         /// <param name="quiet">Write minimal output</param>
         /// <param name="progress">Stream progress data</param>
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
-        /// <returns></returns>
+        /// <returns>The merkle node of the added file in IPFS</returns>
         public async Task<MerkleNode> Add(NamedStream file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             var flags = new Dictionary<string, string>()
@@ -103,7 +65,7 @@ namespace Ipfs.Commands
         /// it contains.
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
-        /// <returns></returns>
+        /// <returns>A stream to your file</returns>
         public async Task<Stream> Cat(string ipfsPath)
         {
             HttpContent content = await ExecuteGetAsync("cat", ipfsPath);
@@ -124,9 +86,9 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// get and set IPFS config values
-        ///   ipfs config controls configuration variables. It works
-        ///   much like 'git config'. The configuration values are stored in a config
-        ///   file inside your IPFS repository.
+        /// ipfs config controls configuration variables. It works
+        /// much like 'git config'. The configuration values are stored in a config
+        /// file inside your IPFS repository.
         /// </summary>
         /// <param name="key">The key of the config entry (e.g. "Addresses.API")</param>
         /// <param name="value">The value to set the config entry to</param>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -51,9 +52,25 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
         /// <returns></returns>
-        public async Task<HttpContent> Links(string key)
+        public async Task<IpfsObjectLinks> Links(string key)
         {
-            return await ExecuteGetAsync("links", key, null);
+            HttpContent content = await ExecuteGetAsync("links", key);
+
+            string json = await content.ReadAsStringAsync();
+
+            Json.IpfsObjectLinks links = JsonConvert.DeserializeObject<Json.IpfsObjectLinks>(json);
+
+            return new IpfsObjectLinks
+            {
+                Hash = new MultiHash(links.Hash),
+                Links = links.Links == null ? null :
+                        links.Links.Select(x => new Link
+                        {
+                            Hash = new MultiHash(x.Hash),
+                            Name = x.Name,
+                            Size = x.Size
+                        }).ToList()
+            };
         }
 
         /// <summary>
@@ -80,9 +97,23 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <returns></returns>
-        public async Task<HttpContent> Stat(string key)
+        public async Task<IpfsObjectStat> Stat(string key)
         {
-            return await ExecuteGetAsync("stat", key, null);
+            HttpContent content = await ExecuteGetAsync("stat", key);
+
+            string json = await content.ReadAsStringAsync();
+
+            Json.IpfsObjectStat ret = JsonConvert.DeserializeObject<Json.IpfsObjectStat>(json);
+
+            return new IpfsObjectStat
+            {
+                Hash = new MultiHash(ret.Hash),
+                BlockSize = ret.BlockSize,
+                CumulativeSize = ret.CumulativeSize,
+                DataSize = ret.DataSize,
+                LinksSize = ret.LinksSize,
+                NumLinks = ret.NumLinks
+            };
         }
 
         private string GetIpfsEncodingValue(IpfsEncoding encoding)

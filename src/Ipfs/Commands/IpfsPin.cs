@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace Ipfs.Commands
         /// <param name="ipfsPath">Path to object(s) to be pinned</param>
         /// <param name="recursive">Recursively pin the object linked to by the specified object(s)</param>
         /// <returns></returns>
-        public async Task<HttpContent> Add(string ipfsPath, bool recursive = false)
+        public async Task<IEnumerable<MultiHash>> Add(string ipfsPath, bool recursive = false)
         {
             var flags = new Dictionary<string, string>();
 
@@ -26,7 +28,18 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteGetAsync("add", ipfsPath, flags);
+            HttpContent content = await ExecuteGetAsync("add", ipfsPath, flags);
+
+            string json = await content.ReadAsStringAsync();
+
+            if(String.IsNullOrEmpty(json))
+            {
+                return Enumerable.Empty<MultiHash>();
+            }
+
+            var jsonDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(json);
+
+            return jsonDict["Pinned"].Select(x => new MultiHash(x));
         }
 
         /// <summary>

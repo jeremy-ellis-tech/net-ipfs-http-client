@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -19,8 +20,8 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="subsystem">the subsystem logging identifier. Use 'all' for all subsystems.</param>
         /// <param name="level">one of: debug, info, notice, warning, error, critical</param>
-        /// <returns></returns>
-        public async Task<HttpContent> Level(string subsystem, IpfsLevel level)
+        /// <returns>Confirmation message</returns>
+        public async Task<string> Level(string subsystem, IpfsLevel level)
         {
             string levelValue = null;
 
@@ -48,7 +49,18 @@ namespace Ipfs.Commands
                     break;
             }
 
-            return await ExecuteGetAsync("level", new[] { subsystem, levelValue });
+            HttpContent content = await ExecuteGetAsync("level", new[] { subsystem, levelValue });
+
+            string json = await content.ReadAsStringAsync();
+
+            if(String.IsNullOrEmpty(json))
+            {
+                return String.Empty;
+            }
+
+            var jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+            return jsonDict["Message"];
         }
 
         /// <summary>

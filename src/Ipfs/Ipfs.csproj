@@ -62,6 +62,9 @@
     <Compile Include="IpfsID.cs" />
     <Compile Include="IpfsLevel.cs" />
     <Compile Include="IpfsNamePublish.cs" />
+    <Compile Include="IpfsObjectLinks.cs" />
+    <Compile Include="IpfsObjectStat.cs" />
+    <Compile Include="IpfsPeer.cs" />
     <Compile Include="IpfsPeerConnectionStatus.cs" />
     <Compile Include="IpfsType.cs" />
     <Compile Include="IpfsVis.cs" />
@@ -72,6 +75,8 @@
     <Compile Include="Json\IpfsID.cs" />
     <Compile Include="Json\IpfsNamePublish.cs" />
     <Compile Include="Json\IpfsNameResolve.cs" />
+    <Compile Include="Json\IpfsObjectLinks.cs" />
+    <Compile Include="Json\IpfsObjectStat.cs" />
     <Compile Include="Json\IpfsStatsBw.cs" />
     <Compile Include="Json\MerkleNode.cs" />
     <Compile Include="Json\IpfsVersion.cs" />

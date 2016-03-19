@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,8 +19,8 @@ namespace Ipfs.Commands
         /// order to reclaim hard disk space.
         /// </summary>
         /// <param name="quiet">Write minimal output</param>
-        /// <returns></returns>
-        public async Task<HttpContent> GC(bool quiet = false)
+        /// <returns>An enumerable of multihashes that were cleared. The enumerable will be empty if no entries were removed</returns>
+        public async Task<IEnumerable<MultiHash>> GC(bool quiet = false)
         {
             var flags = new Dictionary<string, string>();
 
@@ -27,7 +29,18 @@ namespace Ipfs.Commands
                 flags.Add("quiet", "true");
             }
 
-            return await ExecuteGetAsync("gc", flags);
+            HttpContent content = await ExecuteGetAsync("gc", flags);
+
+            string json = await content.ReadAsStringAsync();
+
+            if (String.IsNullOrEmpty(json))
+            {
+                return Enumerable.Empty<MultiHash>();
+            }
+
+            Dictionary<string, string> keys = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+
+            return keys.Values.Select(x => new MultiHash(x));
         }
     }
 }

@@ -43,7 +43,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Unwant(string key)
         {
-            return await ExecuteGetAsync("unwant", key, null);
+            return await ExecuteGetAsync("unwant", key);
         }
 
         /// <summary>

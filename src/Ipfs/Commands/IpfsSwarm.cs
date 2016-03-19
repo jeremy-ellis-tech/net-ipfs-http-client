@@ -17,9 +17,25 @@ namespace Ipfs.Commands
         /// ipfs swarm addrs lists all addresses this node is aware of.
         /// </summary>
         /// <returns>all addresses this node is aware of</returns>
-        public async Task<HttpContent> Addrs()
+        public async Task<IEnumerable<IpfsPeer>> Addrs()
         {
-            return await ExecuteGetAsync("addrs");
+            HttpContent content = await ExecuteGetAsync("addrs");
+
+            string json = await content.ReadAsStringAsync();
+
+            if(String.IsNullOrEmpty(json))
+            {
+                return Enumerable.Empty<IpfsPeer>();
+            }
+
+            var jsonDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(json);
+
+            return jsonDict["Addrs"].Select(x =>
+            new IpfsPeer
+            {
+                PeerId = new MultiHash(x.Key),
+                Addresses = x.Value.Select(y => new MultiAddress(y)).ToList()
+            });
         }
 
         /// <summary>

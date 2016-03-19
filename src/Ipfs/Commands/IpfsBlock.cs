@@ -14,9 +14,11 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">The base58 multihash of an existing block to get</param>
         /// <returns></returns>
-        public async Task<HttpContent> Get(string key)
+        public async Task<byte[]> Get(string key)
         {
-            return await ExecuteGetAsync("get", key, null);
+            HttpContent content = await ExecuteGetAsync("get", key);
+
+            return await content.ReadAsByteArrayAsync();
         }
 
         /// <summary>
@@ -28,7 +30,7 @@ namespace Ipfs.Commands
         /// <returns></returns>
         public async Task<HttpContent> Put(byte[] data)
         {
-            return await ExecuteGetAsync("put", data.ToString(), null);
+            return await ExecuteGetAsync("put", data.ToString());
         }
 
         /// <summary>
