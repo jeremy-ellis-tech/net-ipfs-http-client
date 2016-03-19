@@ -1,4 +1,4 @@
-# net-ipfs-api v0.1
+# net-ipfs-api v0.3.11
 .NET portable class library (PCL) for the InterPlanetary File System (IPFS) API.
 
 _Currently a work in progress_

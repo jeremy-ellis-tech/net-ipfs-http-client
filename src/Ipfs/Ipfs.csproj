@@ -35,19 +35,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Base58.cs" />
+    <Compile Include="Commands\IpfsBitSwap.cs" />
     <Compile Include="Commands\IpfsBootstrap.cs" />
     <Compile Include="Commands\IpfsConfig.cs" />
     <Compile Include="Commands\IpfsDht.cs" />
     <Compile Include="Commands\IpfsDiag.cs" />
+    <Compile Include="Commands\IpfsFile.cs" />
     <Compile Include="Commands\IpfsLog.cs" />
     <Compile Include="Commands\IpfsName.cs" />
     <Compile Include="Commands\IpfsPin.cs" />
     <Compile Include="Commands\IpfsRefs.cs" />
     <Compile Include="Commands\IpfsRepo.cs" />
     <Compile Include="Commands\IpfsRoot.cs" />
+    <Compile Include="Commands\IpfsStats.cs" />
     <Compile Include="Commands\IpfsSwarm.cs" />
+    <Compile Include="Commands\IpfsTar.cs" />
     <Compile Include="Commands\IpfsTour.cs" />
     <Compile Include="Commands\IpfsUpdate.cs" />
+    <Compile Include="IpfsBitSwapStat.cs" />
     <Compile Include="IpfsEncoding.cs" />
     <Compile Include="IpfsCommand.cs" />
     <Compile Include="Commands\IpfsBlock.cs" />
@@ -61,16 +66,19 @@
     <Compile Include="IpfsType.cs" />
     <Compile Include="IpfsVis.cs" />
     <Compile Include="Json\IpfsAdd.cs" />
+    <Compile Include="Json\IpfsBitSwapStat.cs" />
     <Compile Include="Json\IpfsCommand.cs" />
     <Compile Include="Json\IpfsConfigShow.cs" />
     <Compile Include="Json\IpfsID.cs" />
     <Compile Include="Json\IpfsNamePublish.cs" />
     <Compile Include="Json\IpfsNameResolve.cs" />
+    <Compile Include="Json\IpfsStatsBw.cs" />
     <Compile Include="Json\MerkleNode.cs" />
     <Compile Include="Json\IpfsVersion.cs" />
     <Compile Include="MerkleNode.cs" />
     <Compile Include="MultiAddress.cs" />
     <Compile Include="MultiHash.cs" />
+    <Compile Include="NamedStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\UriHelper.cs" />
   </ItemGroup>

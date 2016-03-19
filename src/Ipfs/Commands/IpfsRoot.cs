@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
+using System.Net.Http.Headers;
 
 namespace Ipfs.Commands
 {
@@ -65,7 +66,7 @@ namespace Ipfs.Commands
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<MerkleNode> Add(Tuple<string, Stream> file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(NamedStream file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             var flags = new Dictionary<string, string>()
             {
@@ -82,7 +83,12 @@ namespace Ipfs.Commands
                 flags.Add("quiet", "true");
             }
 
-            HttpContent content = await ExecutePostAsync("add", null, flags, file);
+            MultipartFormDataContent multiContent = new MultipartFormDataContent();
+            StreamContent sc = new StreamContent(file.FileStream);
+            sc.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            multiContent.Add(sc, "file", file.FileName);
+
+            HttpContent content = await ExecutePostAsync("add", null, flags, multiContent);
 
             string json = await content.ReadAsStringAsync();
 
@@ -136,6 +142,49 @@ namespace Ipfs.Commands
             }
 
             return await ExecuteGetAsync("config", ToEnumerable(key, value), null);
+        }
+
+        /// <summary>
+        /// DNS link resolver
+        /// 
+        /// Multihashes are hard to remember, but domain names are usually easy to
+        /// remember.To create memorable aliases for multihashes, DNS TXT
+        /// records can point to other DNS links, IPFS objects, IPNS keys, etc.
+        /// This command resolves those links to the referenced object.
+        /// 
+        /// For example, with this DNS TXT record:
+        /// 
+        /// ipfs.io.TXT "dnslink=/ipfs/QmRzTuh2Lpuz7Gr39stNr6mTFdqAghsZec1JoUnfySUzcy ..."
+        /// 
+        /// The resolver will give:
+        /// 
+        /// > ipfs dns ipfs.io
+        /// /ipfs/QmRzTuh2Lpuz7Gr39stNr6mTFdqAghsZec1JoUnfySUzcy
+        /// 
+        /// And with this DNS TXT record:
+        /// 
+        /// ipfs.ipfs.io.TXT "dnslink=/dns/ipfs.io ..."
+        /// 
+        /// The resolver will give:
+        /// 
+        /// > ipfs dns ipfs.io
+        /// /dns/ipfs.io
+        /// > ipfs dns --recursive
+        /// /ipfs/QmRzTuh2Lpuz7Gr39stNr6mTFdqAghsZec1JoUnfySUzcy
+        /// </summary>
+        /// <param name="domainName">The domain-name name to resolve.</param>
+        /// <param name="recursive">Resolve until the result is not a DNS link</param>
+        /// <returns></returns>
+        public async Task<HttpContent> Dns(string domainName, bool recursive = false)
+        {
+            var flags = new Dictionary<string, string>();
+
+            if(recursive)
+            {
+                flags.Add("recursive", "true");
+            }
+
+            return await ExecuteGetAsync("dns", ToEnumerable(domainName), flags);
         }
 
         /// <summary>

@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Ipfs
@@ -15,7 +13,7 @@ namespace Ipfs
         private readonly Uri _commandUri;
         private readonly HttpClient _httpClient;
 
-        public IpfsCommand(Uri commandUri, HttpClient httpClient)
+        protected IpfsCommand(Uri commandUri, HttpClient httpClient)
         {
             _commandUri = commandUri;
             _httpClient = httpClient;
@@ -25,40 +23,32 @@ namespace Ipfs
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);
 
-            Debug.WriteLine(String.Format("IpfsCommand.ExecuteGetAsync: {0}", commandUri.ToString()));
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, commandUri);
 
-            HttpResponseMessage httpResponse = await _httpClient.GetAsync(commandUri);
-
-            httpResponse.EnsureSuccessStatusCode();
-
-            return httpResponse.Content;
+            return await ExecuteAsync(request);
         }
 
-        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, Tuple<string, Stream> file)
-        {
-            return await ExecutePostAsync(methodName, args, flags, new List<Tuple<string, Stream>> { file });
-        }
-
-        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, IEnumerable<Tuple<string, Stream>> files)
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, HttpContent content)
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);
 
-            Debug.WriteLine(String.Format("IpfsCommand.ExecutePostAsync: {0}", commandUri.ToString()));
-
-            MultipartFormDataContent multiContent = new MultipartFormDataContent();
-
-            foreach (var file in files)
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, commandUri)
             {
-                StreamContent sc = new StreamContent(file.Item2);
-                sc.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-                multiContent.Add(sc, "file", file.Item1);
-            }
+                Content = content,
+            };
 
-            var httpResponse = await _httpClient.PostAsync(commandUri, multiContent);
+            return await ExecuteAsync(request);
+        }
 
-            httpResponse.EnsureSuccessStatusCode();
+        private async Task<HttpContent> ExecuteAsync(HttpRequestMessage request)
+        {
+            Debug.WriteLine(String.Format("IpfsCommand.ExecuteAsync: {0} {1}", request.Method.ToString(), request.RequestUri.ToString()));
 
-            return httpResponse.Content;
+            HttpResponseMessage response = await _httpClient.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            return response.Content;
         }
 
         private Uri GetSubCommandUri(string methodName, IEnumerable<string> args, IDictionary<string, string> flags)

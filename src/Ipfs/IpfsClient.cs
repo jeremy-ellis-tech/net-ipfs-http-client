@@ -51,14 +51,30 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_root == null)
                 {
                     _root = new IpfsRoot(_apiUri, _httpClient);
                 }
 
                 return _root;
+            }
+        }
+
+        /// <summary>
+        /// A set of commands to manipulate the bitswap agent
+        /// </summary>
+        private IpfsBitSwap _bitSwap;
+        public IpfsBitSwap BitSwap
+        {
+            get
+            {
+                if (_bitSwap == null)
+                {
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "bitswap");
+                    _bitSwap = new IpfsBitSwap(commandUri, _httpClient);
+                }
+
+                return _bitSwap;
             }
         }
 
@@ -70,8 +86,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_block == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "block");
@@ -90,8 +104,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_bootstrap == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "bootstrap");
@@ -110,8 +122,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_config == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "config");
@@ -130,8 +140,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_dht == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "dht");
@@ -150,8 +158,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_diag == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "diag");
@@ -163,6 +169,24 @@ namespace Ipfs
         }
 
         /// <summary>
+        /// Interact with ipfs objects representing Unix filesystems
+        /// </summary>
+        private IpfsFile _file;
+        public IpfsFile File
+        {
+            get
+            {
+                if (_file == null)
+                {
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "file");
+                    _file = new IpfsFile(commandUri, _httpClient);
+                }
+
+                return _file;
+            }
+        }
+
+        /// <summary>
         /// Log subcommands
         /// </summary>
         private IpfsLog _log;
@@ -170,8 +194,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_log == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "log");
@@ -190,8 +212,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_name == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "name");
@@ -210,8 +230,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_object == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "object");
@@ -230,8 +248,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_pin == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "pin");
@@ -250,8 +266,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_refs == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "refs");
@@ -270,8 +284,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_repo == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "repo");
@@ -283,6 +295,24 @@ namespace Ipfs
         }
 
         /// <summary>
+        /// Query IPFS statistics
+        /// </summary>
+        private IpfsStats _stats;
+        public IpfsStats Stats
+        {
+            get
+            {
+                if (_stats == null)
+                {
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "stats");
+                    _stats = new IpfsStats(commandUri, _httpClient);
+                }
+
+                return _stats;
+            }
+        }
+
+        /// <summary>
         /// Swarm subcommands
         /// </summary>
         private IpfsSwarm _swarm;
@@ -290,8 +320,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_swarm == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "swarm");
@@ -303,6 +331,24 @@ namespace Ipfs
         }
 
         /// <summary>
+        /// utility functions for tar files in ipfs
+        /// </summary>
+        private IpfsTar _tar;
+        public IpfsTar Tar
+        {
+            get
+            {
+                if (_tar == null)
+                {
+                    Uri commandUri = UriHelper.AppendPath(_apiUri, "tar");
+                    _tar = new IpfsTar(commandUri, _httpClient);
+                }
+
+                return _tar;
+            }
+        }
+
+        /// <summary>
         /// Tour subcommands
         /// </summary>
         private IpfsTour _tour;
@@ -310,8 +356,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_tour == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "tour");
@@ -330,8 +374,6 @@ namespace Ipfs
         {
             get
             {
-                EnsureNotDisposed();
-
                 if (_update == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "update");
@@ -377,7 +419,7 @@ namespace Ipfs
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<MerkleNode> Add(Tuple<string, Stream> file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(NamedStream file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             return await Root.Add(file, recursive, quiet, progress, wrapWithDirectory, trickle);
         }
@@ -559,14 +601,6 @@ namespace Ipfs
         }
 
         #endregion Root command aliases
-
-        private void EnsureNotDisposed()
-        {
-            if(_disposed)
-            {
-                throw new ObjectDisposedException("IpfsClient");
-            }
-        }
 
         private bool _disposed = false;
 
