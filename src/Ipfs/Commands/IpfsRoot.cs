@@ -308,9 +308,11 @@ namespace Ipfs.Commands
         /// <param name="peerId">ID of peer to be pinged</param>
         /// <param name="count">number of ping messages to send</param>
         /// <returns></returns>
-        public async Task<HttpContent> Ping(string peerId, int? count = null)
+        public async Task<IpfsPingResult> Ping(string peerId, int? count = null)
         {
-            return await ExecuteGetAsync("ping", peerId);
+            HttpContent content = await ExecuteGetAsync("ping", peerId);
+            string json = await content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<IpfsPingResult>(json);
         }
 
         /// <summary>
@@ -361,20 +363,10 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="id">The id of the topic you would like to tour</param>
         /// <returns></returns>
-        public async Task<HttpContent> TourCommand(string id)
+        public async Task<Stream> TourCommand(string id)
         {
-            return await ExecuteGetAsync("tour", id);
-        }
-
-        /// <summary>
-        /// Downloads and installs updates for IPFS
-        /// 
-        /// ipfs update is a utility command used to check for updates and apply them.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<HttpContent> UpdateCommand()
-        {
-            return await ExecuteGetAsync("update");
+            HttpContent content = await ExecuteGetAsync("tour", id);
+            return await content.ReadAsStreamAsync();
         }
 
         /// <summary>

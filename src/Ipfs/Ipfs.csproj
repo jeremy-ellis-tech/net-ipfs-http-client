@@ -51,7 +51,6 @@
     <Compile Include="Commands\IpfsSwarm.cs" />
     <Compile Include="Commands\IpfsTar.cs" />
     <Compile Include="Commands\IpfsTour.cs" />
-    <Compile Include="Commands\IpfsUpdate.cs" />
     <Compile Include="IpfsBitSwapStat.cs" />
     <Compile Include="IpfsEncoding.cs" />
     <Compile Include="IpfsCommand.cs" />
@@ -60,12 +59,13 @@
     <Compile Include="IpfsException.cs" />
     <Compile Include="Commands\IpfsObject.cs" />
     <Compile Include="IpfsID.cs" />
-    <Compile Include="IpfsLevel.cs" />
+    <Compile Include="IpfsLogLevel.cs" />
     <Compile Include="IpfsNamePublish.cs" />
     <Compile Include="IpfsObjectLinks.cs" />
     <Compile Include="IpfsObjectStat.cs" />
     <Compile Include="IpfsPeer.cs" />
     <Compile Include="IpfsPeerConnectionStatus.cs" />
+    <Compile Include="IpfsPingResult.cs" />
     <Compile Include="IpfsType.cs" />
     <Compile Include="IpfsVis.cs" />
     <Compile Include="Json\IpfsAdd.cs" />

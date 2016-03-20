@@ -42,9 +42,9 @@ namespace Ipfs.Commands
         /// that consume the dot format to generate graphs of the network.
         /// </summary>
         /// <param name="timeout">diagnostic timeout duration</param>
-        /// <param name="vis">output vis. one of: d3, dot</param>
-        /// <returns></returns>
-        public async Task<HttpContent> Net(string timeout = null, IpfsVis? vis = null)
+        /// <param name="vis">output vis. one of: d3, dot. Default d3</param>
+        /// <returns>UTF-8 encoded byte array of text, d3 or dot format of network graph, depending on vis parameter</returns>
+        public async Task<byte[]> Net(string timeout = null, IpfsVis? vis = null)
         {
             var flags = new Dictionary<string, string>();
 
@@ -72,7 +72,9 @@ namespace Ipfs.Commands
                 flags.Add("vis", visValue);
             }
 
-            return await ExecuteGetAsync("net", flags);
+            HttpContent content = await ExecuteGetAsync("net", flags);
+
+            return await content.ReadAsByteArrayAsync();
         }
     }
 }

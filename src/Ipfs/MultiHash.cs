@@ -69,6 +69,11 @@ namespace Ipfs
             return Value.GetHashCode();
         }
 
+        public static explicit operator string(MultiHash multiHash)
+        {
+            return multiHash.ToString();
+        }
+
         public override string ToString()
         {
             return Base58.Encode(Value);

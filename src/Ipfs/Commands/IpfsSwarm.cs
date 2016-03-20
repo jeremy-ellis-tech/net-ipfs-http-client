@@ -30,12 +30,7 @@ namespace Ipfs.Commands
 
             var jsonDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(json);
 
-            return jsonDict["Addrs"].Select(x =>
-            new IpfsPeer
-            {
-                PeerId = new MultiHash(x.Key),
-                Addresses = x.Value.Select(y => new MultiAddress(y)).ToList()
-            });
+            return jsonDict["Addrs"].Select(x => new IpfsPeer(new MultiHash(x.Key), x.Value.Select(y => new MultiAddress(y))));
         }
 
         /// <summary>

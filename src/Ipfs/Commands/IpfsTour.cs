@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -14,28 +12,31 @@ namespace Ipfs.Commands
         /// <summary>
         /// Show a list of IPFS Tour topics
         /// </summary>
-        /// <returns></returns>
-        public async Task<HttpContent> List()
+        /// <returns>Stream to tour topcs</returns>
+        public async Task<Stream> List()
         {
-            return await ExecuteGetAsync("list");
+            HttpContent content = await ExecuteGetAsync("list");
+
+            return await content.ReadAsStreamAsync();
         }
 
         /// <summary>
         /// Show the next IPFS Tour topic
         /// </summary>
-        /// <returns></returns>
-        public async Task<HttpContent> Next()
+        /// <returns>Next tour topic</returns>
+        public async Task<Stream> Next()
         {
-            return await ExecuteGetAsync("next");
+            HttpContent content = await ExecuteGetAsync("next");
+
+            return await content.ReadAsStreamAsync();
         }
 
         /// <summary>
         /// Restart the IPFS Tour
         /// </summary>
-        /// <returns></returns>
-        public async Task<HttpContent> Restart()
+        public async Task Restart()
         {
-            return await ExecuteGetAsync("restart");
+            await ExecuteGetAsync("restart");
         }
     }
 }

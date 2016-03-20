@@ -366,24 +366,6 @@ namespace Ipfs
             }
         }
 
-        /// <summary>
-        /// Update subcommands
-        /// </summary>
-        private IpfsUpdate _update;
-        public IpfsUpdate Update
-        {
-            get
-            {
-                if (_update == null)
-                {
-                    Uri commandUri = UriHelper.AppendPath(_apiUri, "update");
-                    _update = new IpfsUpdate(commandUri, _httpClient);
-                }
-
-                return _update;
-            }
-        }
-
         #region Root command aliases
 
         ///// <summary>
@@ -548,7 +530,7 @@ namespace Ipfs
         /// <param name="peerId">ID of peer to be pinged</param>
         /// <param name="count">number of ping messages to send</param>
         /// <returns></returns>
-        public async Task<HttpContent> Ping(string peerId, int? count = null)
+        public async Task<IpfsPingResult> Ping(string peerId, int? count = null)
         {
             return await Root.Ping(peerId, count);
         }
@@ -579,20 +561,9 @@ namespace Ipfs
         /// </summary>
         /// <param name="id">The id of the topic you would like to tour</param>
         /// <returns></returns>
-        public async Task<HttpContent> TourCommand(string id)
+        public async Task<Stream> TourCommand(string id)
         {
             return await Root.TourCommand(id);
-        }
-
-        /// <summary>
-        /// Downloads and installs updates for IPFS
-        /// 
-        /// ipfs update is a utility command used to check for updates and apply them.
-        /// </summary>
-        /// <returns></returns>
-        public async Task<HttpContent> UpdateCommand()
-        {
-            return await Root.UpdateCommand();
         }
 
         public async Task<IpfsVersion> Version(bool number = false)

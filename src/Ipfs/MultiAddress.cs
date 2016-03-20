@@ -65,6 +65,11 @@ namespace Ipfs
             return OriginalString.GetHashCode();
         }
 
+        public static explicit operator string(MultiAddress multiAddress)
+        {
+            return multiAddress.ToString();
+        }
+
         public override string ToString()
         {
             return OriginalString;

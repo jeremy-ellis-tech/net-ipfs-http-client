@@ -1,6 +1,6 @@
 ﻿namespace Ipfs
 {
-    public enum IpfsLevel
+    public enum IpfsLogLevel
     {
         Debug,
         Info,

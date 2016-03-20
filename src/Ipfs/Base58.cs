@@ -12,7 +12,7 @@ namespace Ipfs
     /// <remarks>
     /// See here for more details: https://en.bitcoin.it/wiki/Base58Check_encoding
     /// </remarks>
-    public class Base58
+    public static class Base58
     {
         private const int CheckSumSize = 4;
         private const string Digits = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

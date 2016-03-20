@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -21,28 +20,28 @@ namespace Ipfs.Commands
         /// <param name="subsystem">the subsystem logging identifier. Use 'all' for all subsystems.</param>
         /// <param name="level">one of: debug, info, notice, warning, error, critical</param>
         /// <returns>Confirmation message</returns>
-        public async Task<string> Level(string subsystem, IpfsLevel level)
+        public async Task<string> Level(string subsystem, IpfsLogLevel level)
         {
             string levelValue = null;
 
             switch (level)
             {
-                case IpfsLevel.Debug:
+                case IpfsLogLevel.Debug:
                     levelValue = "debug";
                     break;
-                case IpfsLevel.Info:
+                case IpfsLogLevel.Info:
                     levelValue = "info";
                     break;
-                case IpfsLevel.Notice:
+                case IpfsLogLevel.Notice:
                     levelValue = "notice";
                     break;
-                case IpfsLevel.Warning:
+                case IpfsLogLevel.Warning:
                     levelValue = "warning";
                     break;
-                case IpfsLevel.Error:
+                case IpfsLogLevel.Error:
                     levelValue = "error";
                     break;
-                case IpfsLevel.Critical:
+                case IpfsLogLevel.Critical:
                     levelValue = "critical";
                     break;
                 default:
@@ -67,10 +66,12 @@ namespace Ipfs.Commands
         /// Read the logs
         /// 'ipfs log tail' is a utility command used to read log output as it is written.
         /// </summary>
-        /// <returns></returns>
-        public async Task<HttpContent> Tail()
+        /// <returns>A stream to the log tail output</returns>
+        public async Task<Stream> Tail()
         {
-            return await ExecuteGetAsync("tail");
+            HttpContent content = await ExecuteGetAsync("tail");
+
+            return await content.ReadAsStreamAsync();
         }
     }
 }
