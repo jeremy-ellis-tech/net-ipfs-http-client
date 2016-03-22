@@ -1,4 +1,5 @@
-﻿using Ipfs.Utilities;
+﻿using Ipfs.Json;
+using Ipfs.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,11 +13,13 @@ namespace Ipfs
     {
         private readonly Uri _commandUri;
         private readonly HttpClient _httpClient;
+        protected readonly IJsonSerializer _jsonSerializer;
 
-        protected IpfsCommand(Uri commandUri, HttpClient httpClient)
+        protected IpfsCommand(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer)
         {
             _commandUri = commandUri;
             _httpClient = httpClient;
+            _jsonSerializer = jsonSerializer;
         }
 
         #region ExecuteGetAsync() Overrides

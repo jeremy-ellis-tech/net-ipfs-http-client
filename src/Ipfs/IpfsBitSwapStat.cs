@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Ipfs
@@ -47,11 +46,6 @@ namespace Ipfs
                 + BlocksReceived.GetHashCode()
                 + DupBlksReceived.GetHashCode()
                 + DupDataReceived.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
         }
     }
 }

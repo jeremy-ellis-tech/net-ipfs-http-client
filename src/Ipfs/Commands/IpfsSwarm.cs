@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Ipfs.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,9 @@ namespace Ipfs.Commands
 {
     public class IpfsSwarm : IpfsCommand
     {
-        public IpfsSwarm(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsSwarm(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// List known addresses. Useful to debug.
@@ -28,7 +30,7 @@ namespace Ipfs.Commands
                 return Enumerable.Empty<IpfsPeer>();
             }
 
-            var jsonDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, List<string>>>>(json);
+            var jsonDict = _jsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<string>>>>(json);
 
             return jsonDict["Addrs"].Select(x => new IpfsPeer(new MultiHash(x.Key), x.Value.Select(y => new MultiAddress(y))));
         }
@@ -111,7 +113,7 @@ namespace Ipfs.Commands
 
             string json = await content.ReadAsStringAsync();
 
-            var peerConnectionStatuses = JsonConvert.DeserializeObject<IDictionary<string, IList<string>>>(json);
+            var peerConnectionStatuses = _jsonSerializer.Deserialize<IDictionary<string, IList<string>>>(json);
 
             return peerConnectionStatuses
                 .SelectMany(x => x.Value)
@@ -132,7 +134,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("peers");
             string json = await content.ReadAsStringAsync();
-            var swarmPeers = JsonConvert.DeserializeObject<IDictionary<string, IList<string>>>(json);
+            var swarmPeers = _jsonSerializer.Deserialize<IDictionary<string, IList<string>>>(json);
             return swarmPeers
                 .SelectMany(x => x.Value)
                 .Select(x => new MultiAddress(x)).ToArray();

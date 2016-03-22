@@ -1,18 +1,19 @@
 ﻿using Ipfs.Json;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace Ipfs.Commands
 {
     public class IpfsRoot : IpfsCommand
     {
-        public IpfsRoot(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsRoot(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Add an object to ipfs.
@@ -21,14 +22,14 @@ namespace Ipfs.Commands
         /// MerkleDAG.A smarter partial add with a staging area(like git)
         /// remains to be implemented
         /// </summary>
-        /// <param name="file">A named stream of the file. ie. A stream pointing to the file to be added and it's name as a string.</param>
+        /// <param name="stream">The ipfs stream.</param>
         /// <param name="recursive">Add directory paths recursively</param>
         /// <param name="quiet">Write minimal output</param>
         /// <param name="progress">Stream progress data</param>
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns>The merkle node of the added file in IPFS</returns>
-        public async Task<MerkleNode> Add(NamedStream file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(IpfsStream stream, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             var flags = new Dictionary<string, string>()
             {
@@ -46,15 +47,15 @@ namespace Ipfs.Commands
             }
 
             MultipartFormDataContent multiContent = new MultipartFormDataContent();
-            StreamContent sc = new StreamContent(file.FileStream);
+            StreamContent sc = new StreamContent(stream);
             sc.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            multiContent.Add(sc, "file", file.FileName);
+            multiContent.Add(sc, "file", stream.Name);
 
             HttpContent content = await ExecutePostAsync("add", null, flags, multiContent);
 
             string json = await content.ReadAsStringAsync();
 
-            IpfsAdd add = JsonConvert.DeserializeObject<IpfsAdd>(json);
+            IpfsAdd add = _jsonSerializer.Deserialize<IpfsAdd>(json);
 
             return new MerkleNode(new MultiHash(add.Hash)) { Name = add.Name };
         }
@@ -81,7 +82,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("commands");
             string json = await content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Json.IpfsCommand>(json);
+            return _jsonSerializer.Deserialize<Json.IpfsCommand>(json);
         }
 
         /// <summary>
@@ -224,7 +225,7 @@ namespace Ipfs.Commands
 
             string json = await content.ReadAsStringAsync();
 
-            Json.IpfsID id = JsonConvert.DeserializeObject<Json.IpfsID>(json);
+            Json.IpfsID id = _jsonSerializer.Deserialize<Json.IpfsID>(json);
 
             return new IpfsID
             {
@@ -250,7 +251,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("ls", path);
             string json = await content.ReadAsStringAsync();
-            var jsonDict = JsonConvert.DeserializeObject<IDictionary<string, IList<Json.MerkleNode>>>(json);
+            var jsonDict = _jsonSerializer.Deserialize<IDictionary<string, IList<Json.MerkleNode>>>(json);
             return ToMerkleNodes(jsonDict.SelectMany(x => x.Value)).ToList();
         }
 
@@ -312,7 +313,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("ping", peerId);
             string json = await content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IpfsPingResult>(json);
+            return _jsonSerializer.Deserialize<IpfsPingResult>(json);
         }
 
         /// <summary>
@@ -378,7 +379,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("version");
             string json = await content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IpfsVersion>(json);
+            return _jsonSerializer.Deserialize<IpfsVersion>(json);
         }
     }
 }

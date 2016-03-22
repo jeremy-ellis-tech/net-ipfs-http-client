@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsDiag : IpfsCommand
     {
-        public IpfsDiag(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsDiag(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Generates a network diagnostics report

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsRefs : IpfsCommand
     {
-        public IpfsRefs(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsRefs(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Lists all local references

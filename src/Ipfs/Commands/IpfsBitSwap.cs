@@ -1,15 +1,15 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsBitSwap : IpfsCommand
     {
-        public IpfsBitSwap(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient)
+        internal IpfsBitSwap(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
         {
         }
 
@@ -23,7 +23,7 @@ namespace Ipfs.Commands
 
             string json = await content.ReadAsStringAsync();
 
-            Json.IpfsBitSwapStat stat = JsonConvert.DeserializeObject<Json.IpfsBitSwapStat>(json);
+            Json.IpfsBitSwapStat stat = _jsonSerializer.Deserialize<Json.IpfsBitSwapStat>(json);
 
             return new IpfsBitSwapStat
             {

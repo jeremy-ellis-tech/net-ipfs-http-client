@@ -1,16 +1,17 @@
-﻿using Newtonsoft.Json;
+﻿using Ipfs.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
 {
     public class IpfsObject : IpfsCommand
     {
-        public IpfsObject(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsObject(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Outputs the raw bytes in an IPFS object
@@ -58,7 +59,7 @@ namespace Ipfs.Commands
 
             string json = await content.ReadAsStringAsync();
 
-            Json.IpfsObjectLinks links = JsonConvert.DeserializeObject<Json.IpfsObjectLinks>(json);
+            Json.IpfsObjectLinks links = _jsonSerializer.Deserialize<Json.IpfsObjectLinks>(json);
 
             return new IpfsObjectLinks
             {
@@ -103,7 +104,7 @@ namespace Ipfs.Commands
 
             string json = await content.ReadAsStringAsync();
 
-            Json.IpfsObjectStat ret = JsonConvert.DeserializeObject<Json.IpfsObjectStat>(json);
+            Json.IpfsObjectStat ret = _jsonSerializer.Deserialize<Json.IpfsObjectStat>(json);
 
             return new IpfsObjectStat
             {

@@ -1,15 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsRepo : IpfsCommand
     {
-        public IpfsRepo(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsRepo(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Perform a garbage collection sweep on the repo
@@ -38,7 +40,7 @@ namespace Ipfs.Commands
                 return Enumerable.Empty<MultiHash>();
             }
 
-            Dictionary<string, string> keys = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            Dictionary<string, string> keys = _jsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
             return keys.Values.Select(x => new MultiHash(x));
         }

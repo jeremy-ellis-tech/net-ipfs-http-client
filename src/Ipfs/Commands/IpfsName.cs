@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Ipfs.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -7,7 +7,9 @@ namespace Ipfs.Commands
 {
     public class IpfsName : IpfsCommand
     {
-        public IpfsName(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsName(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Publish an object to IPNS
@@ -23,7 +25,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("publish", new[] { name, ipfsPath });
             string json = await content.ReadAsStringAsync();
-            Json.IpfsNamePublish ret = JsonConvert.DeserializeObject<Json.IpfsNamePublish>(json);
+            Json.IpfsNamePublish ret = _jsonSerializer.Deserialize<Json.IpfsNamePublish>(json);
             return new IpfsNamePublish { Name = ret.Name, Value = new MultiHash(ret.Value)};
         }
 
@@ -40,7 +42,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("resolve", name);
             string json = await content.ReadAsStringAsync();
-            Json.IpfsNameResolve resolve = JsonConvert.DeserializeObject<Json.IpfsNameResolve>(json);
+            Json.IpfsNameResolve resolve = _jsonSerializer.Deserialize<Json.IpfsNameResolve>(json);
             return resolve.Path;
         }
     }

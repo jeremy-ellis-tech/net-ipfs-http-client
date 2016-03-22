@@ -2,12 +2,15 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsTour : IpfsCommand
     {
-        public IpfsTour(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsTour(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Show a list of IPFS Tour topics

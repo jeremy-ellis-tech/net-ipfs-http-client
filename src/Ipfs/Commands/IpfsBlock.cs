@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ipfs.Json;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -6,7 +7,9 @@ namespace Ipfs.Commands
 {
     public class IpfsBlock : IpfsCommand
     {
-        public IpfsBlock(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsBlock(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// ipfs block get <key> - Get a raw IPFS block

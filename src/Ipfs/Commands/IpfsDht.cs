@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsDht : IpfsCommand
     {
-        public IpfsDht(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsDht(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Run a 'FindPeer' query through the DHT

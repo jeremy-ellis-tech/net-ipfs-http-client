@@ -51,6 +51,7 @@
     <Compile Include="Commands\IpfsSwarm.cs" />
     <Compile Include="Commands\IpfsTar.cs" />
     <Compile Include="Commands\IpfsTour.cs" />
+    <Compile Include="Json\IJsonSerializer.cs" />
     <Compile Include="IpfsBitSwapStat.cs" />
     <Compile Include="IpfsEncoding.cs" />
     <Compile Include="IpfsCommand.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="IpfsPingResult.cs" />
     <Compile Include="IpfsType.cs" />
     <Compile Include="IpfsVis.cs" />
+    <Compile Include="Json\JsonSerializer.cs" />
     <Compile Include="Json\IpfsAdd.cs" />
     <Compile Include="Json\IpfsBitSwapStat.cs" />
     <Compile Include="Json\IpfsCommand.cs" />
@@ -83,7 +85,7 @@
     <Compile Include="MerkleNode.cs" />
     <Compile Include="MultiAddress.cs" />
     <Compile Include="MultiHash.cs" />
-    <Compile Include="NamedStream.cs" />
+    <Compile Include="IpfsStream.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\UriHelper.cs" />
   </ItemGroup>

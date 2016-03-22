@@ -4,12 +4,15 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsBootstrap : IpfsCommand
     {
-        public IpfsBootstrap(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsBootstrap(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Add peers to the bootstrap list

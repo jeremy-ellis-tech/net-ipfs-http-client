@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsFile : IpfsCommand
     {
-        public IpfsFile(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient)
+        internal IpfsFile(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
         {
         }
 

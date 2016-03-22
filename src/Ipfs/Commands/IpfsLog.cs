@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Ipfs.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +9,9 @@ namespace Ipfs.Commands
 {
     public class IpfsLog : IpfsCommand
     {
-        public IpfsLog(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsLog(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Change the logging level
@@ -57,7 +59,7 @@ namespace Ipfs.Commands
                 return String.Empty;
             }
 
-            var jsonDict = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            var jsonDict = _jsonSerializer.Deserialize<Dictionary<string, string>>(json);
 
             return jsonDict["Message"];
         }

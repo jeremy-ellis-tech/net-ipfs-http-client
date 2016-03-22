@@ -1,15 +1,17 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Ipfs.Json;
 
 namespace Ipfs.Commands
 {
     public class IpfsPin : IpfsCommand
     {
-        public IpfsPin(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsPin(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Pins objects to local storage
@@ -37,7 +39,7 @@ namespace Ipfs.Commands
                 return Enumerable.Empty<MultiHash>();
             }
 
-            var jsonDict = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(json);
+            var jsonDict = _jsonSerializer.Deserialize<Dictionary<string, List<string>>>(json);
 
             return jsonDict["Pinned"].Select(x => new MultiHash(x));
         }

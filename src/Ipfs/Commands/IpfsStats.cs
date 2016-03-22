@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using Ipfs.Json;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -8,7 +8,7 @@ namespace Ipfs.Commands
 {
     public class IpfsStats : IpfsCommand
     {
-        public IpfsStats(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient)
+        internal IpfsStats(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
         {
         }
 
@@ -48,7 +48,7 @@ namespace Ipfs.Commands
 
             string json = await content.ReadAsStringAsync();
 
-            return JsonConvert.DeserializeObject<Json.IpfsStatsBw>(json);
+            return _jsonSerializer.Deserialize<Json.IpfsStatsBw>(json);
         }
     }
 }

@@ -26,19 +26,25 @@ namespace Ipfs
             get { return "api/v0"; }
         }
 
+        private static IJsonSerializer DefaultJsonSerializer
+        {
+            get { return new JsonSerializer(); }
+        }
+
         private readonly Uri _apiUri;
         private readonly HttpClient _httpClient;
+        private readonly IJsonSerializer _jsonSerializer;
 
-        public IpfsClient() : this(DefaultUri, DefaultHttpClient) { }
+        public IpfsClient() : this(DefaultUri, DefaultHttpClient, DefaultJsonSerializer) { }
+        public IpfsClient(string address) : this(new Uri(address), DefaultHttpClient, DefaultJsonSerializer) { }
+        public IpfsClient(Uri address) : this(address, DefaultHttpClient, DefaultJsonSerializer) { }
+        public IpfsClient(Uri address, HttpClient httpClient) : this(address, httpClient, DefaultJsonSerializer) { }
 
-        public IpfsClient(string address) : this(new Uri(address), DefaultHttpClient) { }
-
-        public IpfsClient(Uri address) : this(address, DefaultHttpClient) { }
-
-        public IpfsClient(Uri address, HttpClient httpClient)
+        public IpfsClient(Uri address, HttpClient httpClient, IJsonSerializer jsonSerializer)
         {
             _apiUri = UriHelper.AppendPath(address, DefaultApiPath);
             _httpClient = httpClient;
+            _jsonSerializer = jsonSerializer;
         }
 
         /// <summary>
@@ -53,7 +59,7 @@ namespace Ipfs
             {
                 if (_root == null)
                 {
-                    _root = new IpfsRoot(_apiUri, _httpClient);
+                    _root = new IpfsRoot(_apiUri, _httpClient, _jsonSerializer);
                 }
 
                 return _root;
@@ -71,7 +77,7 @@ namespace Ipfs
                 if (_bitSwap == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "bitswap");
-                    _bitSwap = new IpfsBitSwap(commandUri, _httpClient);
+                    _bitSwap = new IpfsBitSwap(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _bitSwap;
@@ -89,7 +95,7 @@ namespace Ipfs
                 if (_block == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "block");
-                    _block = new IpfsBlock(commandUri, _httpClient);
+                    _block = new IpfsBlock(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _block;
@@ -107,7 +113,7 @@ namespace Ipfs
                 if (_bootstrap == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "bootstrap");
-                    _bootstrap = new IpfsBootstrap(commandUri, _httpClient);
+                    _bootstrap = new IpfsBootstrap(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _bootstrap;
@@ -125,7 +131,7 @@ namespace Ipfs
                 if (_config == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "config");
-                    _config = new IpfsConfig(commandUri, _httpClient);
+                    _config = new IpfsConfig(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _config;
@@ -143,7 +149,7 @@ namespace Ipfs
                 if (_dht == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "dht");
-                    _dht = new IpfsDht(commandUri, _httpClient);
+                    _dht = new IpfsDht(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _dht;
@@ -161,7 +167,7 @@ namespace Ipfs
                 if (_diag == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "diag");
-                    _diag = new IpfsDiag(commandUri, _httpClient);
+                    _diag = new IpfsDiag(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _diag;
@@ -179,7 +185,7 @@ namespace Ipfs
                 if (_file == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "file");
-                    _file = new IpfsFile(commandUri, _httpClient);
+                    _file = new IpfsFile(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _file;
@@ -197,7 +203,7 @@ namespace Ipfs
                 if (_log == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "log");
-                    _log = new IpfsLog(commandUri, _httpClient);
+                    _log = new IpfsLog(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _log;
@@ -215,7 +221,7 @@ namespace Ipfs
                 if (_name == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "name");
-                    _name = new IpfsName(commandUri, _httpClient);
+                    _name = new IpfsName(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _name;
@@ -233,7 +239,7 @@ namespace Ipfs
                 if (_object == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "object");
-                    _object = new IpfsObject(commandUri, _httpClient);
+                    _object = new IpfsObject(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _object;
@@ -251,7 +257,7 @@ namespace Ipfs
                 if (_pin == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "pin");
-                    _pin = new IpfsPin(commandUri, _httpClient);
+                    _pin = new IpfsPin(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _pin;
@@ -269,7 +275,7 @@ namespace Ipfs
                 if (_refs == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "refs");
-                    _refs = new IpfsRefs(commandUri, _httpClient);
+                    _refs = new IpfsRefs(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _refs;
@@ -287,7 +293,7 @@ namespace Ipfs
                 if (_repo == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "repo");
-                    _repo = new IpfsRepo(commandUri, _httpClient);
+                    _repo = new IpfsRepo(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _repo;
@@ -305,7 +311,7 @@ namespace Ipfs
                 if (_stats == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "stats");
-                    _stats = new IpfsStats(commandUri, _httpClient);
+                    _stats = new IpfsStats(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _stats;
@@ -323,7 +329,7 @@ namespace Ipfs
                 if (_swarm == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "swarm");
-                    _swarm = new IpfsSwarm(commandUri, _httpClient);
+                    _swarm = new IpfsSwarm(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _swarm;
@@ -341,7 +347,7 @@ namespace Ipfs
                 if (_tar == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "tar");
-                    _tar = new IpfsTar(commandUri, _httpClient);
+                    _tar = new IpfsTar(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _tar;
@@ -359,7 +365,7 @@ namespace Ipfs
                 if (_tour == null)
                 {
                     Uri commandUri = UriHelper.AppendPath(_apiUri, "tour");
-                    _tour = new IpfsTour(commandUri, _httpClient);
+                    _tour = new IpfsTour(commandUri, _httpClient, _jsonSerializer);
                 }
 
                 return _tour;
@@ -401,7 +407,7 @@ namespace Ipfs
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns></returns>
-        public async Task<MerkleNode> Add(NamedStream file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(IpfsStream file, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             return await Root.Add(file, recursive, quiet, progress, wrapWithDirectory, trickle);
         }

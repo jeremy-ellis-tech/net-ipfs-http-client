@@ -1,17 +1,15 @@
 ﻿using Ipfs.Json;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
 {
     public class IpfsConfig : IpfsCommand
     {
-        public IpfsConfig(Uri commandUri, HttpClient httpClient) : base(commandUri, httpClient) { }
+        internal IpfsConfig(Uri commandUri, HttpClient httpClient, IJsonSerializer jsonSerializer) : base(commandUri, httpClient, jsonSerializer)
+        {
+        }
 
         /// <summary>
         /// Opens the config file for editing in $EDITOR
@@ -46,7 +44,7 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("show");
             var json = await content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<IpfsConfigShow>(json);
+            return _jsonSerializer.Deserialize<IpfsConfigShow>(json);
         }
     }
 }
