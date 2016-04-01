@@ -251,23 +251,8 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("ls", path);
             string json = await content.ReadAsStringAsync();
-            var jsonDict = _jsonSerializer.Deserialize<IDictionary<string, IList<Json.MerkleNode>>>(json);
-            return ToMerkleNodes(jsonDict.SelectMany(x => x.Value)).ToList();
-        }
-
-        private IEnumerable<MerkleNode> ToMerkleNodes(IEnumerable<Json.MerkleNode> nodes)
-        {
-            if (nodes == null) return null;
-
-            return nodes.Select(x =>
-            new MerkleNode(new MultiHash(x.Hash))
-            {
-                Name = x.Name,
-                Size = x.Size,
-                Links = ToMerkleNodes(x.Links),
-                Type = x.Type
-            }
-            );
+            var jsonDict = _jsonSerializer.Deserialize<IDictionary<string, IList<MerkleNode>>>(json);
+            return jsonDict.Values.First();
         }
 
         /// <summary>

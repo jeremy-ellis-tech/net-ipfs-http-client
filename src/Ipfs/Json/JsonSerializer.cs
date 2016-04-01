@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace Ipfs.Json
 {
@@ -10,7 +11,12 @@ namespace Ipfs.Json
         {
             _settings = new JsonSerializerSettings
             {
-                Formatting = Formatting.Indented
+                NullValueHandling = NullValueHandling.Ignore,
+                Converters = new List<JsonConverter>
+                {
+                    new MultiHashConverter(),
+                    new MerkleNodeConverter(),
+                },
             };
         }
 

@@ -15,7 +15,12 @@ namespace Ipfs
             Hash = multiHash;
         }
 
-        public MultiHash Hash { get; private set; }
+        public MerkleNode()
+        {
+
+        }
+
+        public MultiHash Hash { get; set; }
 
         public string Name { get; set; }
 
@@ -29,7 +34,12 @@ namespace Ipfs
 
         public bool Equals(MerkleNode other)
         {
-            return Equals(other.Hash, Hash);
+            return Equals(other.Hash, Hash)
+                && Equals(other.Name, Name)
+                && Equals(other.Size, Size)
+                && Equals(other.Type, Type)
+                && Equals(other.Data, Data)
+                && Equals(other.Links, Links);
         }
 
         public override bool Equals(object obj)
@@ -40,7 +50,7 @@ namespace Ipfs
 
             if(other == null) return false;
 
-            return Equals(other, this);
+            return Equals(other);
         }
 
         public override int GetHashCode()

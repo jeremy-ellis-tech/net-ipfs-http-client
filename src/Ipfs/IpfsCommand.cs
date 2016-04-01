@@ -58,6 +58,13 @@ namespace Ipfs
             return await ExecuteAsync(request);
         }
 
+        #region ExecutePostAsync() Overrides
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IDictionary<string, string> flags, HttpContent content)
+        {
+            return await ExecutePostAsync(methodName, null, flags, content);
+        }
+        #endregion
+
         protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, HttpContent content)
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -79,16 +80,24 @@ namespace Ipfs.Commands
         /// 'ipfs object put' is a plumbing command for storing DAG nodes.
         /// It reads from stdin, and the output is a base58 encoded multihash.
         /// </summary>
-        /// <param name="data">Data to be stored as a DAG object</param>
-        /// <param name="encoding">Encoding type of <data>, either "protobuf" or "json"</param>
-        /// <returns></returns>
-        public async Task<HttpContent> Put(string data, IpfsEncoding encoding)
+        /// <param name="node">Node to be stored as a DAG object</param>
+        /// <returns>The added object key</returns>
+        public async Task<MerkleNode> Put(MerkleNode node)
         {
             var flags = new Dictionary<string, string>();
 
-            flags.Add("encoding", GetIpfsEncodingValue(encoding));
+            flags.Add("encoding", GetIpfsEncodingValue(IpfsEncoding.Json));
 
-            return await ExecuteGetAsync("put", data, flags);
+            //Thanks to @slothbag for this snippet
+            MultipartFormDataContent content = new MultipartFormDataContent();
+            string json = _jsonSerializer.Serialize(node);
+            StringContent sc = new StringContent(json);
+            sc.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            content.Add(sc, "file", "file");
+
+            HttpContent returnContent = await ExecutePostAsync("put", flags, content);
+            string returnJson = await returnContent.ReadAsStringAsync();
+            return _jsonSerializer.Deserialize<MerkleNode>(returnJson);
         }
 
         /// <summary>

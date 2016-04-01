@@ -80,8 +80,9 @@
     <Compile Include="Json\IpfsObjectLinks.cs" />
     <Compile Include="Json\IpfsObjectStat.cs" />
     <Compile Include="Json\IpfsStatsBw.cs" />
-    <Compile Include="Json\MerkleNode.cs" />
     <Compile Include="Json\IpfsVersion.cs" />
+    <Compile Include="Json\MerkleNodeConverter.cs" />
+    <Compile Include="Json\MultiHashConverter.cs" />
     <Compile Include="MerkleNode.cs" />
     <Compile Include="MultiAddress.cs" />
     <Compile Include="MultiHash.cs" />
