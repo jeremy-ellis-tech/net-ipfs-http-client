@@ -40,3 +40,12 @@ CLI arguments are required method parameters and CLI options are optional method
         var peers = await ipfs.Swarm.Peers();
         await ipfs.Swarm.Disconnect(peers);
     }
+
+## Contributions
+Contributions are very welcome. Create a feature branch off `develop`, make your changes, and raise a pull request back to `develop`. Unit tests encouraged.
+
+## License
+MIT license, see LICENSE for details
+
+## Thanks
+Thanks to [@slothbag](https://github.com/slothbag) for spotting/fixing various bugs :)
