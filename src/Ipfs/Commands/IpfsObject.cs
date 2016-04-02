@@ -87,6 +87,7 @@ namespace Ipfs.Commands
             var flags = new Dictionary<string, string>();
 
             flags.Add("encoding", GetIpfsEncodingValue(IpfsEncoding.Json));
+            flags.Add("datafieldenc", GetIpfsEncodingValue(IpfsEncoding.Base64));
 
             //Thanks to @slothbag for this snippet
             MultipartFormDataContent content = new MultipartFormDataContent();
@@ -134,6 +135,8 @@ namespace Ipfs.Commands
                     return "json";
                 case IpfsEncoding.Protobuf:
                     return "protobuf";
+                case IpfsEncoding.Base64:
+                    return "base64";
                 default:
                     return null;
             }

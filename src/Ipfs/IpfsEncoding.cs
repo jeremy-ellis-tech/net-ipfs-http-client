@@ -3,6 +3,7 @@
     public enum IpfsEncoding
     {
         Json,
-        Protobuf
+        Protobuf,
+        Base64
     }
 }
