@@ -29,11 +29,12 @@ namespace Ipfs.Commands
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
         /// <returns>The merkle node of the added file in IPFS</returns>
-        public async Task<MerkleNode> Add(IpfsStream stream, bool recursive = false, bool quiet = false, bool progress = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(IpfsStream stream, bool recursive = false, bool quiet = false, bool wrapWithDirectory = false, bool trickle = false)
         {
             var flags = new Dictionary<string, string>()
             {
-                { "stream-channels", "true" }
+                { "stream-channels", "true" },
+                { "progress", "false" }
             };
 
             if (recursive)
@@ -109,27 +110,27 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// DNS link resolver
-        /// 
+        ///
         /// Multihashes are hard to remember, but domain names are usually easy to
         /// remember.To create memorable aliases for multihashes, DNS TXT
         /// records can point to other DNS links, IPFS objects, IPNS keys, etc.
         /// This command resolves those links to the referenced object.
-        /// 
+        ///
         /// For example, with this DNS TXT record:
-        /// 
+        ///
         /// ipfs.io.TXT "dnslink=/ipfs/QmRzTuh2Lpuz7Gr39stNr6mTFdqAghsZec1JoUnfySUzcy ..."
-        /// 
+        ///
         /// The resolver will give:
-        /// 
+        ///
         /// > ipfs dns ipfs.io
         /// /ipfs/QmRzTuh2Lpuz7Gr39stNr6mTFdqAghsZec1JoUnfySUzcy
-        /// 
+        ///
         /// And with this DNS TXT record:
-        /// 
+        ///
         /// ipfs.ipfs.io.TXT "dnslink=/dns/ipfs.io ..."
-        /// 
+        ///
         /// The resolver will give:
-        /// 
+        ///
         /// > ipfs dns ipfs.io
         /// /dns/ipfs.io
         /// > ipfs dns --recursive
@@ -152,15 +153,15 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// Download IPFS objects
-        /// 
+        ///
         /// Retrieves the object named by <ipfs-path> and stores the data to disk.
-        /// 
+        ///
         /// By default, the output will be stored at./<ipfs-path>, but an alternate path
-        /// 
+        ///
         /// can be specified with '--output=<path>' or '-o=<path>'.
-        /// 
+        ///
         /// To output a TAR archive instead of unpacked files, use '--archive' or '-a'.
-        /// 
+        ///
         /// To compress the output with GZIP compression, use '--compress' or '-C'. You
         /// may also specify the level of compression by specifying '-l=<1-9>'.
         /// </summary>
@@ -199,10 +200,10 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// Show IPFS Node ID info
-        /// 
+        ///
         /// Prints out information about the specified peer,
         /// if no peer is specified, prints out local peers info.
-        /// 
+        ///
         /// ipfs id supports the format option for output with the following keys:
         /// <id> : the peers id
         /// <aver>: agent version
@@ -239,10 +240,10 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// List links from an object.
-        /// 
+        ///
         ///  Retrieves the object named by <ipfs-path> and displays the links
         ///  it contains, with the following format:
-        ///  
+        ///
         /// <link base58 hash> <link size in bytes> <link name>
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
@@ -257,11 +258,11 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// Mounts IPFS to the filesystem (read-only)
-        /// 
+        ///
         /// Mount ipfs at a read-only mountpoint on the OS (default: /ipfs and /ipns).
         /// All ipfs objects will be accessible under that directory.Note that the
         /// root will not be listable, as it is virtual. Access known paths directly.
-        /// 
+        ///
         /// You may have to create /ipfs and /ipfs before using 'ipfs mount'
         /// </summary>
         /// <param name="f">The path where IPFS should be mounted</param>
@@ -286,7 +287,7 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// send echo request packets to IPFS hosts
-        /// 
+        ///
         /// ipfs ping is a tool to test sending data to other nodes. It finds nodes
         /// via the routing system, send pings, wait for pongs, and print out round-
         /// trip latency information.
@@ -342,7 +343,7 @@ namespace Ipfs.Commands
 
         /// <summary>
         /// An introduction to IPFS
-        /// 
+        ///
         /// This is a tour that takes you through various IPFS concepts,
         /// features, and tools to make sure you get up to speed with
         /// IPFS very quickly
