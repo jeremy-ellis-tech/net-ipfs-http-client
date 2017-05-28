@@ -24,39 +24,39 @@ namespace Ipfs
         }
 
         #region ExecuteGetAsync() Overrides
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, CancellationTokenSource cts = default(CancellationTokenSource))
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, null, cts);
+            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, null, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, CancellationTokenSource cts = default(CancellationTokenSource))
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, ToEnumerable(arg), null, cts);
+            return await ExecuteGetAsync(methodName, ToEnumerable(arg), null, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IDictionary<string,string> flags, CancellationTokenSource cts = default(CancellationTokenSource))
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IDictionary<string,string> flags, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, flags, cts);
+            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, flags, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, IDictionary<string, string> flags, CancellationTokenSource cts = default(CancellationTokenSource))
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, IDictionary<string, string> flags, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, ToEnumerable(arg), flags, cts);
+            return await ExecuteGetAsync(methodName, ToEnumerable(arg), flags, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, CancellationTokenSource cts = default(CancellationTokenSource))
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, args, null, cts);
+            return await ExecuteGetAsync(methodName, args, null, cancellationToken);
         }
         #endregion
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, CancellationTokenSource cts = default(CancellationTokenSource))
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, CancellationToken cancellationToken = default(CancellationToken))
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, commandUri);
 
-            return await ExecuteAsync(request, cts);
+            return await ExecuteAsync(request, cancellationToken);
         }
 
         #region ExecutePostAsync() Overrides
@@ -78,11 +78,11 @@ namespace Ipfs
             return await ExecuteAsync(request);
         }
 
-        private async Task<HttpContent> ExecuteAsync(HttpRequestMessage request, CancellationTokenSource cts = default(CancellationTokenSource))
+        private async Task<HttpContent> ExecuteAsync(HttpRequestMessage request, CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.WriteLine(String.Format("IpfsCommand.ExecuteAsync: {0} {1}", request.Method.ToString(), request.RequestUri.ToString()));
 
-            HttpResponseMessage response = await _httpClient.SendAsync(request, cts.Token);
+            HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken);
 
             response.EnsureSuccessStatusCode();
 

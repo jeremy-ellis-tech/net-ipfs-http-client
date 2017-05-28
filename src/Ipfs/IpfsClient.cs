@@ -421,9 +421,9 @@ namespace Ipfs
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
         /// <param name="cancellationToken">A token that can be used to cancel the request</param>
         /// <returns></returns>
-        public async Task<Stream> Cat(string ipfsPath, CancellationTokenSource cts = default(CancellationTokenSource))
+        public async Task<Stream> Cat(string ipfsPath, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Cat(ipfsPath, cts);
+            return await Root.Cat(ipfsPath, cancellationToken);
         }
 
         /// <summary>

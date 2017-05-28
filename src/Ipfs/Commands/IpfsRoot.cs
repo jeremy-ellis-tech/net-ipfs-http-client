@@ -69,9 +69,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
         /// <returns>A stream to your file</returns>
-        public async Task<Stream> Cat(string ipfsPath, CancellationTokenSource cts = default(CancellationTokenSource))
+        public async Task<Stream> Cat(string ipfsPath, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("cat", ipfsPath, cts);
+            HttpContent content = await ExecuteGetAsync("cat", ipfsPath, cancellationToken);
             return await content.ReadAsStreamAsync();
         }
 
