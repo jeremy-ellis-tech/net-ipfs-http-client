@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -68,9 +69,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
         /// <returns>A stream to your file</returns>
-        public async Task<Stream> Cat(string ipfsPath)
+        public async Task<Stream> Cat(string ipfsPath, CancellationTokenSource cts = default(CancellationTokenSource))
         {
-            HttpContent content = await ExecuteGetAsync("cat", ipfsPath);
+            HttpContent content = await ExecuteGetAsync("cat", ipfsPath, cts);
             return await content.ReadAsStreamAsync();
         }
 

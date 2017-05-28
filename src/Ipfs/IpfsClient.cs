@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs
@@ -418,10 +419,11 @@ namespace Ipfs
         /// it contains.
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
+        /// <param name="cancellationToken">A token that can be used to cancel the request</param>
         /// <returns></returns>
-        public async Task<Stream> Cat(string ipfsPath)
+        public async Task<Stream> Cat(string ipfsPath, CancellationTokenSource cts = default(CancellationTokenSource))
         {
-            return await Root.Cat(ipfsPath);
+            return await Root.Cat(ipfsPath, cts);
         }
 
         /// <summary>
