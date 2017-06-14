@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -17,10 +18,11 @@ namespace Ipfs.Commands
         /// Lists all local references
         /// Displays the hashes of all local objects.
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>Returns an enumerable of multihashes, or an empty enumerable if nothing is found.</returns>
-        public async Task<IEnumerable<MultiHash>> Local()
+        public async Task<IEnumerable<MultiHash>> Local(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("local");
+            HttpContent content = await ExecuteGetAsync("local", cancellationToken);
 
             //DOESN'T return json!
             //Returns a list of multihashes separated by "\n"

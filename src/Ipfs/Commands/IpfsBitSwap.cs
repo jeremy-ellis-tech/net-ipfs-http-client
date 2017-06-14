@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -16,10 +17,11 @@ namespace Ipfs.Commands
         /// <summary>
         /// Show some diagnostic information on the bitswap agent
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>IpfsBitSwapStat object</returns>
-        public async Task<IpfsBitSwapStat> Stat()
+        public async Task<IpfsBitSwapStat> Stat(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("stat");
+            HttpContent content = await ExecuteGetAsync("stat", cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -40,10 +42,11 @@ namespace Ipfs.Commands
         /// Remove a given block from your wantlist
         /// </summary>
         /// <param name="key">key to remove from your wantlist</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Unwant(string key)
+        public async Task<HttpContent> Unwant(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync("unwant", key);
+            return await ExecuteGetAsync("unwant", key, cancellationToken);
         }
 
         /// <summary>
@@ -52,8 +55,9 @@ namespace Ipfs.Commands
         /// Print out all blocks currently on the bitswap wantlist for the local peer
         /// </summary>
         /// <param name="peer">specify which peer to show wantlist for (default self)</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Wantlist(string peer = null)
+        public async Task<HttpContent> Wantlist(string peer = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -62,7 +66,7 @@ namespace Ipfs.Commands
                 flags.Add("peer", peer);
             }
 
-            return await ExecuteGetAsync("wantlist", flags);
+            return await ExecuteGetAsync("wantlist", flags, cancellationToken);
         }
     }
 }

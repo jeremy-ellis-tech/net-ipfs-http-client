@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs
@@ -23,49 +24,49 @@ namespace Ipfs
         }
 
         #region ExecuteGetAsync() Overrides
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName)
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, null);
+            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, null, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg)
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, ToEnumerable(arg), null);
+            return await ExecuteGetAsync(methodName, ToEnumerable(arg), null, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IDictionary<string,string> flags)
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IDictionary<string,string> flags, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, flags);
+            return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, flags, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, IDictionary<string, string> flags)
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, string arg, IDictionary<string, string> flags, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, ToEnumerable(arg), flags);
+            return await ExecuteGetAsync(methodName, ToEnumerable(arg), flags, cancellationToken);
         }
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args)
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync(methodName, args, null);
+            return await ExecuteGetAsync(methodName, args, null, cancellationToken);
         }
         #endregion
 
-        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags)
+        protected async Task<HttpContent> ExecuteGetAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, CancellationToken cancellationToken = default(CancellationToken))
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);
 
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, commandUri);
 
-            return await ExecuteAsync(request);
+            return await ExecuteAsync(request, cancellationToken);
         }
 
         #region ExecutePostAsync() Overrides
-        protected async Task<HttpContent> ExecutePostAsync(string methodName, IDictionary<string, string> flags, HttpContent content)
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IDictionary<string, string> flags, HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecutePostAsync(methodName, null, flags, content);
+            return await ExecutePostAsync(methodName, null, flags, content, cancellationToken);
         }
         #endregion
 
-        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, HttpContent content)
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);
 
@@ -74,14 +75,14 @@ namespace Ipfs
                 Content = content,
             };
 
-            return await ExecuteAsync(request);
+            return await ExecuteAsync(request, cancellationToken);
         }
 
-        private async Task<HttpContent> ExecuteAsync(HttpRequestMessage request)
+        private async Task<HttpContent> ExecuteAsync(HttpRequestMessage request, CancellationToken cancellationToken = default(CancellationToken))
         {
             Debug.WriteLine(String.Format("IpfsCommand.ExecuteAsync: {0} {1}", request.Method.ToString(), request.RequestUri.ToString()));
 
-            HttpResponseMessage response = await _httpClient.SendAsync(request);
+            HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken);
 
             response.EnsureSuccessStatusCode();
 
