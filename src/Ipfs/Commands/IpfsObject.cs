@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -23,9 +24,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
         /// <returns></returns>
-        public async Task<HttpContent> Data(string key)
+        public async Task<HttpContent> Data(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync("data", key);
+            return await ExecuteGetAsync("data", key, cancellationToken);
         }
 
         /// <summary>
@@ -37,13 +38,13 @@ namespace Ipfs.Commands
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <param name="encoding">The encoding of the data</param>
         /// <returns></returns>
-        public async Task<HttpContent> Get(string key, IpfsEncoding encoding)
+        public async Task<HttpContent> Get(string key, IpfsEncoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
             flags.Add("encoding", GetIpfsEncodingValue(encoding));
 
-            return await ExecuteGetAsync("get", key, flags);
+            return await ExecuteGetAsync("get", key, flags, cancellationToken);
         }
 
         /// <summary>
@@ -54,9 +55,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
         /// <returns></returns>
-        public async Task<IpfsObjectLinks> Links(string key)
+        public async Task<IpfsObjectLinks> Links(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("links", key);
+            HttpContent content = await ExecuteGetAsync("links", key, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -82,7 +83,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="node">Node to be stored as a DAG object</param>
         /// <returns>The added object key</returns>
-        public async Task<MerkleNode> Put(MerkleNode node)
+        public async Task<MerkleNode> Put(MerkleNode node, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -96,7 +97,7 @@ namespace Ipfs.Commands
             sc.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             content.Add(sc, "file", "file");
 
-            HttpContent returnContent = await ExecutePostAsync("put", flags, content);
+            HttpContent returnContent = await ExecutePostAsync("put", flags, content, cancellationToken);
             string returnJson = await returnContent.ReadAsStringAsync();
             return _jsonSerializer.Deserialize<MerkleNode>(returnJson);
         }
@@ -108,9 +109,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <returns></returns>
-        public async Task<IpfsObjectStat> Stat(string key)
+        public async Task<IpfsObjectStat> Stat(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("stat", key);
+            HttpContent content = await ExecuteGetAsync("stat", key, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
