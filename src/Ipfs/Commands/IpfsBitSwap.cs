@@ -17,6 +17,7 @@ namespace Ipfs.Commands
         /// <summary>
         /// Show some diagnostic information on the bitswap agent
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>IpfsBitSwapStat object</returns>
         public async Task<IpfsBitSwapStat> Stat(CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -41,6 +42,7 @@ namespace Ipfs.Commands
         /// Remove a given block from your wantlist
         /// </summary>
         /// <param name="key">key to remove from your wantlist</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<HttpContent> Unwant(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -53,6 +55,7 @@ namespace Ipfs.Commands
         /// Print out all blocks currently on the bitswap wantlist for the local peer
         /// </summary>
         /// <param name="peer">specify which peer to show wantlist for (default self)</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<HttpContent> Wantlist(string peer = null, CancellationToken cancellationToken = default(CancellationToken))
         {
