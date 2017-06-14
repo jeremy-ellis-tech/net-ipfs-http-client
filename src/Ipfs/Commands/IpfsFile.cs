@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -22,10 +23,11 @@ namespace Ipfs.Commands
         /// size is the IPFS link size.
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Ls(string path)
+        public async Task<HttpContent> Ls(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync("ls");
+            return await ExecuteGetAsync("ls", cancellationToken);
         }
     }
 }
