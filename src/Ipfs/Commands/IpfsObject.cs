@@ -23,6 +23,7 @@ namespace Ipfs.Commands
         /// multihash.
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<HttpContent> Data(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -37,6 +38,7 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
         /// <param name="encoding">The encoding of the data</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<HttpContent> Get(string key, IpfsEncoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -54,6 +56,7 @@ namespace Ipfs.Commands
         /// multihash.
         /// </summary>
         /// <param name="key">Key of the object to retrieve, in base58-encoded multihash format</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<IpfsObjectLinks> Links(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -82,6 +85,7 @@ namespace Ipfs.Commands
         /// It reads from stdin, and the output is a base58 encoded multihash.
         /// </summary>
         /// <param name="node">Node to be stored as a DAG object</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>The added object key</returns>
         public async Task<MerkleNode> Put(MerkleNode node, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -108,6 +112,7 @@ namespace Ipfs.Commands
         /// <key> is a base58 encoded multihash.It outputs to stdout:
         /// </summary>
         /// <param name="key">Key of the object to retrieve (in base58-encoded multihash format)</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<IpfsObjectStat> Stat(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
