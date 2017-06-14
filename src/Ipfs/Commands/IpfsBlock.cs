@@ -17,6 +17,7 @@ namespace Ipfs.Commands
         /// 'ipfs block get' is a plumbing command for retreiving raw ipfs blocks.
         /// </summary>
         /// <param name="key">The base58 multihash of an existing block to get</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<byte[]> Get(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -31,6 +32,7 @@ namespace Ipfs.Commands
         /// It reads from stdin, and <key> is a base58 encoded multihash.
         /// </summary>
         /// <param name="data">The data to be stored as an IPFS block</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<HttpContent> Put(byte[] data, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -41,6 +43,7 @@ namespace Ipfs.Commands
         /// Print information of a raw IPFS block
         /// </summary>
         /// <param name="key">The base58 multihash of an existing block to get</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<HttpContent> Stat(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
