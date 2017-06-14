@@ -1,6 +1,7 @@
 ﻿using Ipfs.Json;
 using System;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -17,9 +18,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">The base58 multihash of an existing block to get</param>
         /// <returns></returns>
-        public async Task<byte[]> Get(string key)
+        public async Task<byte[]> Get(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("get", key);
+            HttpContent content = await ExecuteGetAsync("get", key, cancellationToken);
 
             return await content.ReadAsByteArrayAsync();
         }
@@ -31,9 +32,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="data">The data to be stored as an IPFS block</param>
         /// <returns></returns>
-        public async Task<HttpContent> Put(byte[] data)
+        public async Task<HttpContent> Put(byte[] data, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync("put", data.ToString());
+            return await ExecuteGetAsync("put", data.ToString(), cancellationToken);
         }
 
         /// <summary>
@@ -41,9 +42,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="key">The base58 multihash of an existing block to get</param>
         /// <returns></returns>
-        public async Task<HttpContent> Stat(string key)
+        public async Task<HttpContent> Stat(string key, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync("get", key);
+            return await ExecuteGetAsync("get", key, cancellationToken);
         }
     }
 }
