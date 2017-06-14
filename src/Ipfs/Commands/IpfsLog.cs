@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -21,8 +22,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="subsystem">the subsystem logging identifier. Use 'all' for all subsystems.</param>
         /// <param name="level">one of: debug, info, notice, warning, error, critical</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>Confirmation message</returns>
-        public async Task<string> Level(string subsystem, IpfsLogLevel level)
+        public async Task<string> Level(string subsystem, IpfsLogLevel level, CancellationToken cancellationToken = default(CancellationToken))
         {
             string levelValue = null;
 
@@ -50,7 +52,7 @@ namespace Ipfs.Commands
                     break;
             }
 
-            HttpContent content = await ExecuteGetAsync("level", new[] { subsystem, levelValue });
+            HttpContent content = await ExecuteGetAsync("level", new[] { subsystem, levelValue }, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -68,10 +70,11 @@ namespace Ipfs.Commands
         /// Read the logs
         /// 'ipfs log tail' is a utility command used to read log output as it is written.
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>A stream to the log tail output</returns>
-        public async Task<Stream> Tail()
+        public async Task<Stream> Tail(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("tail");
+            HttpContent content = await ExecuteGetAsync("tail", cancellationToken);
 
             return await content.ReadAsStreamAsync();
         }
