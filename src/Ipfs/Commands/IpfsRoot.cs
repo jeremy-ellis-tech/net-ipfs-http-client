@@ -29,8 +29,9 @@ namespace Ipfs.Commands
         /// <param name="progress">Stream progress data</param>
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>The merkle node of the added file in IPFS</returns>
-        public async Task<MerkleNode> Add(IpfsStream stream, bool recursive = false, bool quiet = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(IpfsStream stream, bool recursive = false, bool quiet = false, bool wrapWithDirectory = false, bool trickle = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>()
             {
@@ -53,7 +54,7 @@ namespace Ipfs.Commands
             sc.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             multiContent.Add(sc, "file", stream.Name);
 
-            HttpContent content = await ExecutePostAsync("add", null, flags, multiContent);
+            HttpContent content = await ExecutePostAsync("add", null, flags, multiContent, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -68,6 +69,7 @@ namespace Ipfs.Commands
         /// it contains.
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>A stream to your file</returns>
         public async Task<Stream> Cat(string ipfsPath, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -80,9 +82,9 @@ namespace Ipfs.Commands
         /// Lists all available commands (and subcommands) and exits.
         /// </summary>
         /// <returns></returns>
-        public async Task<Json.IpfsCommand> Commands()
+        public async Task<Json.IpfsCommand> Commands(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("commands");
+            HttpContent content = await ExecuteGetAsync("commands", cancellationToken);
             string json = await content.ReadAsStringAsync();
             return _jsonSerializer.Deserialize<Json.IpfsCommand>(json);
         }
@@ -96,8 +98,9 @@ namespace Ipfs.Commands
         /// <param name="key">The key of the config entry (e.g. "Addresses.API")</param>
         /// <param name="value">The value to set the config entry to</param>
         /// <param name="bool">Set a boolean value</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> ConfigCommand(string key, string value = null, bool @bool = false)
+        public async Task<HttpContent> ConfigCommand(string key, string value = null, bool @bool = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var args = new Dictionary<string, string>();
 
@@ -106,7 +109,7 @@ namespace Ipfs.Commands
                 args.Add("bool", "true");
             }
 
-            return await ExecuteGetAsync("config", new[] { key, value });
+            return await ExecuteGetAsync("config", new[] { key, value }, cancellationToken);
         }
 
         /// <summary>
@@ -139,8 +142,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="domainName">The domain-name name to resolve.</param>
         /// <param name="recursive">Resolve until the result is not a DNS link</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Dns(string domainName, bool recursive = false)
+        public async Task<HttpContent> Dns(string domainName, bool recursive = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -149,7 +153,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteGetAsync("dns", domainName, flags);
+            return await ExecuteGetAsync("dns", domainName, flags, cancellationToken);
         }
 
         /// <summary>
@@ -171,8 +175,9 @@ namespace Ipfs.Commands
         /// <param name="archive">Output a TAR archive</param>
         /// <param name="compress">Compress the output with GZIP compression</param>
         /// <param name="compressionLevel">The level of compression (1-9)</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
+        public async Task<HttpContent> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -196,7 +201,7 @@ namespace Ipfs.Commands
                 flags.Add("compressionLevel", compressionLevel.Value.ToString());
             }
 
-            return await ExecuteGetAsync("get", ipfsPath, flags);
+            return await ExecuteGetAsync("get", ipfsPath, flags, cancellationToken);
         }
 
         /// <summary>
@@ -213,8 +218,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="peerId">peer.ID of node to look up</param>
         /// <param name="format">optional output format</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<IpfsID> Id(string peerId = null, string format = null)
+        public async Task<IpfsID> Id(string peerId = null, string format = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -223,7 +229,7 @@ namespace Ipfs.Commands
                 flags.Add("format", format);
             }
 
-            HttpContent content = await ExecuteGetAsync("id", peerId, flags);
+            HttpContent content = await ExecuteGetAsync("id", peerId, flags, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -248,10 +254,11 @@ namespace Ipfs.Commands
         /// <link base58 hash> <link size in bytes> <link name>
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<IList<MerkleNode>> Ls(string path)
+        public async Task<IList<MerkleNode>> Ls(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("ls", path);
+            HttpContent content = await ExecuteGetAsync("ls", path, cancellationToken);
             string json = await content.ReadAsStringAsync();
             var jsonDict = _jsonSerializer.Deserialize<IDictionary<string, IList<MerkleNode>>>(json);
             return jsonDict.Values.First();
@@ -268,8 +275,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="f">The path where IPFS should be mounted</param>
         /// <param name="n">The path where IPNS should be mounted</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Mount(string f = null, string n = null)
+        public async Task<HttpContent> Mount(string f = null, string n = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -283,7 +291,7 @@ namespace Ipfs.Commands
                 flags.Add("n", n);
             }
 
-            return await ExecuteGetAsync("mount");
+            return await ExecuteGetAsync("mount", cancellationToken);
         }
 
         /// <summary>
@@ -295,10 +303,11 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="peerId">ID of peer to be pinged</param>
         /// <param name="count">number of ping messages to send</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<IpfsPingResult> Ping(string peerId, int? count = null)
+        public async Task<IpfsPingResult> Ping(string peerId, int? count = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("ping", peerId);
+            HttpContent content = await ExecuteGetAsync("ping", peerId, cancellationToken);
             string json = await content.ReadAsStringAsync();
             return _jsonSerializer.Deserialize<IpfsPingResult>(json);
         }
@@ -314,8 +323,9 @@ namespace Ipfs.Commands
         /// <param name="edges">Emit edge format: `<from> -> <to>`</param>
         /// <param name="unique">Omit duplicate refs from output</param>
         /// <param name="recursive">Recursively list links of child nodes</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
+        public async Task<HttpContent> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -339,7 +349,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteGetAsync("refs", ipfsPath);
+            return await ExecuteGetAsync("refs", ipfsPath, cancellationToken);
         }
 
         /// <summary>
@@ -350,10 +360,11 @@ namespace Ipfs.Commands
         /// IPFS very quickly
         /// </summary>
         /// <param name="id">The id of the topic you would like to tour</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<Stream> TourCommand(string id)
+        public async Task<Stream> TourCommand(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("tour", id);
+            HttpContent content = await ExecuteGetAsync("tour", id, cancellationToken);
             return await content.ReadAsStreamAsync();
         }
 
@@ -361,10 +372,11 @@ namespace Ipfs.Commands
         /// ipfs version - Shows ipfs version information
         /// </summary>
         /// <param name="number">Only show the version number</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>Returns the current version of ipfs and exits.</returns>
-        public async Task<IpfsVersion> Version(bool number = false)
+        public async Task<IpfsVersion> Version(bool number = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("version");
+            HttpContent content = await ExecuteGetAsync("version", cancellationToken);
             string json = await content.ReadAsStringAsync();
             return _jsonSerializer.Deserialize<IpfsVersion>(json);
         }

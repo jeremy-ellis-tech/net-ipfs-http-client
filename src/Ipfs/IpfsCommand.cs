@@ -60,13 +60,13 @@ namespace Ipfs
         }
 
         #region ExecutePostAsync() Overrides
-        protected async Task<HttpContent> ExecutePostAsync(string methodName, IDictionary<string, string> flags, HttpContent content)
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IDictionary<string, string> flags, HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecutePostAsync(methodName, null, flags, content);
+            return await ExecutePostAsync(methodName, null, flags, content, cancellationToken);
         }
         #endregion
 
-        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, HttpContent content)
+        protected async Task<HttpContent> ExecutePostAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, HttpContent content, CancellationToken cancellationToken = default(CancellationToken))
         {
             Uri commandUri = GetSubCommandUri(methodName, args, flags);
 
@@ -75,7 +75,7 @@ namespace Ipfs
                 Content = content,
             };
 
-            return await ExecuteAsync(request);
+            return await ExecuteAsync(request, cancellationToken);
         }
 
         private async Task<HttpContent> ExecuteAsync(HttpRequestMessage request, CancellationToken cancellationToken = default(CancellationToken))

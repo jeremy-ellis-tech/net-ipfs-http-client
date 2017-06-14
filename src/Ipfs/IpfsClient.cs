@@ -407,10 +407,11 @@ namespace Ipfs
         /// <param name="progress">Stream progress data</param>
         /// <param name="wrapWithDirectory">Wrap files with a directory object</param>
         /// <param name="trickle">Use trickle-dag format for dag generation</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<MerkleNode> Add(IpfsStream file, bool recursive = false, bool quiet = false, bool wrapWithDirectory = false, bool trickle = false)
+        public async Task<MerkleNode> Add(IpfsStream file, bool recursive = false, bool quiet = false, bool wrapWithDirectory = false, bool trickle = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Add(file, recursive, quiet, wrapWithDirectory, trickle);
+            return await Root.Add(file, recursive, quiet, wrapWithDirectory, trickle, cancellationToken);
         }
 
         /// <summary>
@@ -420,6 +421,7 @@ namespace Ipfs
         /// </summary>
         /// <param name="ipfsPath">The path to the IPFS object(s) to be outputted</param>
         /// <param name="cancellationToken">A token that can be used to cancel the request</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
         public async Task<Stream> Cat(string ipfsPath, CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -431,9 +433,9 @@ namespace Ipfs
         /// Lists all available commands (and subcommands) and exits.
         /// </summary>
         /// <returns></returns>
-        public async Task<Json.IpfsCommand> Commands()
+        public async Task<Json.IpfsCommand> Commands(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Commands();
+            return await Root.Commands(cancellationToken);
         }
 
         /// <summary>
@@ -445,10 +447,11 @@ namespace Ipfs
         /// <param name="key">The key of the config entry (e.g. "Addresses.API")</param>
         /// <param name="value">The value to set the config entry to</param>
         /// <param name="bool">Set a boolean value</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> ConfigCommand(string key, string value = null, bool @bool = false)
+        public async Task<HttpContent> ConfigCommand(string key, string value = null, bool @bool = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.ConfigCommand(key, value, @bool);
+            return await Root.ConfigCommand(key, value, @bool, cancellationToken);
         }
 
         /// <summary>
@@ -470,10 +473,11 @@ namespace Ipfs
         /// <param name="archive">Output a TAR archive</param>
         /// <param name="compress">Compress the output with GZIP compression</param>
         /// <param name="compressionLevel">The level of compression (1-9)</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null)
+        public async Task<HttpContent> Get(string ipfsPath, string output = null, bool archive = false, bool compress = false, int? compressionLevel = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Get(ipfsPath, output, archive, compress, compressionLevel);
+            return await Root.Get(ipfsPath, output, archive, compress, compressionLevel, cancellationToken);
         }
 
         /// <summary>
@@ -490,10 +494,11 @@ namespace Ipfs
         /// </summary>
         /// <param name="peerId">peer.ID of node to look up</param>
         /// <param name="format">optional output format</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<IpfsID> Id(string peerId = null, string format = null)
+        public async Task<IpfsID> Id(string peerId = null, string format = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Id(peerId, format);
+            return await Root.Id(peerId, format, cancellationToken);
         }
 
         /// <summary>
@@ -505,10 +510,11 @@ namespace Ipfs
         /// <link base58 hash> <link size in bytes> <link name>
         /// </summary>
         /// <param name="path">The path to the IPFS object(s) to list links from</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<IList<MerkleNode>> Ls(string path)
+        public async Task<IList<MerkleNode>> Ls(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Ls(path);
+            return await Root.Ls(path, cancellationToken);
         }
 
         /// <summary>
@@ -522,10 +528,11 @@ namespace Ipfs
         /// </summary>
         /// <param name="f">The path where IPFS should be mounted</param>
         /// <param name="n">The path where IPNS should be mounted</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Mount(string f = null, string n = null)
+        public async Task<HttpContent> Mount(string f = null, string n = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Mount(f, n);
+            return await Root.Mount(f, n, cancellationToken);
         }
 
         /// <summary>
@@ -537,10 +544,11 @@ namespace Ipfs
         /// </summary>
         /// <param name="peerId">ID of peer to be pinged</param>
         /// <param name="count">number of ping messages to send</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<IpfsPingResult> Ping(string peerId, int? count = null)
+        public async Task<IpfsPingResult> Ping(string peerId, int? count = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Ping(peerId, count);
+            return await Root.Ping(peerId, count, cancellationToken);
         }
 
         /// <summary>
@@ -554,10 +562,11 @@ namespace Ipfs
         /// <param name="edges">Emit edge format: `<from> -> <to>`</param>
         /// <param name="unique">Omit duplicate refs from output</param>
         /// <param name="recursive">Recursively list links of child nodes</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false)
+        public async Task<HttpContent> RefsCommand(string ipfsPath, string format = null, bool edges = false, bool unique = false, bool recursive = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.RefsCommand(ipfsPath, format, edges, unique, recursive);
+            return await Root.RefsCommand(ipfsPath, format, edges, unique, recursive, cancellationToken);
         }
 
         /// <summary>
@@ -568,15 +577,16 @@ namespace Ipfs
         /// IPFS very quickly
         /// </summary>
         /// <param name="id">The id of the topic you would like to tour</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<Stream> TourCommand(string id)
+        public async Task<Stream> TourCommand(string id, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.TourCommand(id);
+            return await Root.TourCommand(id, cancellationToken);
         }
 
-        public async Task<IpfsVersion> Version(bool number = false)
+        public async Task<IpfsVersion> Version(bool number = false, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Root.Version(number);
+            return await Root.Version(number, cancellationToken);
         }
 
         #endregion Root command aliases
