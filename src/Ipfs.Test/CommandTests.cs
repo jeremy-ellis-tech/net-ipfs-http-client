@@ -5,6 +5,8 @@ using System;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Ipfs.Test
 {
@@ -13,7 +15,7 @@ namespace Ipfs.Test
     {
         //The client won't actually make any connections during tests.
         //The request gets caught by our MessageHandlers
-
+                
         [TestMethod]
         public void RequestUriShouldBeBuiltCorrectly()
         {
@@ -90,6 +92,111 @@ namespace Ipfs.Test
             }
 
             Assert.IsTrue(Equals(mockHttpMessageHandler.LastRequest.RequestUri, expectedRequestUri));
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToCancelGetRequest()
+        {
+            try
+            {
+                var mockResponse = new HttpResponseMessage(HttpStatusCode.OK);
+                mockResponse.Content = new StringContent(String.Empty);
+
+                var mockHttpMessageHandler = new MockHttpMessageHandler(mockResponse, TimeSpan.FromSeconds(5));
+                string mockAddress = "http://127.0.0.1:5001";
+
+                var cts = new CancellationTokenSource();                
+                using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
+                {
+                    var task = client.Commands(cts.Token);
+                    cts.Cancel();
+                    task.Wait();
+                    throw new Exception("The operation was not cancelled");
+                }
+            }
+            catch (AggregateException ex) when (ex.InnerException is TaskCanceledException)
+            {
+                Console.WriteLine("The operation has been canceled properly");                
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToCancelPostRequest()
+        {
+            try
+            {
+                var mockResponse = new HttpResponseMessage(HttpStatusCode.OK);
+                mockResponse.Content = new StringContent(String.Empty);
+
+                var mockHttpMessageHandler = new MockHttpMessageHandler(mockResponse, TimeSpan.FromSeconds(5));
+                string mockAddress = "http://127.0.0.1:5001";
+
+                var cts = new CancellationTokenSource();
+                using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
+                {
+                    var task = client.ConfigCommand("test", "test", true, cts.Token);
+                    //var task = client.Object.Put(new MerkleNode(), cts.Token);                    
+                    cts.Cancel();                    
+                    task.Wait();
+                    throw new Exception("The operation was not cancelled");
+                }
+            }
+            catch (AggregateException ex) when (ex.InnerException is TaskCanceledException)
+            {
+                Console.WriteLine("The operation has been canceled properly");
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToCancelIpfsObjectGetRequest()
+        {
+            try
+            {
+                var mockResponse = new HttpResponseMessage(HttpStatusCode.OK);
+                mockResponse.Content = new StringContent(String.Empty);
+
+                var mockHttpMessageHandler = new MockHttpMessageHandler(mockResponse, TimeSpan.FromSeconds(5));
+                string mockAddress = "http://127.0.0.1:5001";
+
+                var cts = new CancellationTokenSource();
+                using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
+                {
+                    var task = client.Object.Get("somekey", IpfsEncoding.Base64, cts.Token);
+                    cts.Cancel();
+                    task.Wait();
+                    throw new Exception("The operation was not cancelled");
+                }
+            }
+            catch (AggregateException ex) when (ex.InnerException is TaskCanceledException)
+            {
+                Console.WriteLine("The operation has been canceled properly");
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToCancelIpfsObjectPostRequest()
+        {
+            try
+            {
+                var mockResponse = new HttpResponseMessage(HttpStatusCode.OK);
+                mockResponse.Content = new StringContent(String.Empty);
+
+                var mockHttpMessageHandler = new MockHttpMessageHandler(mockResponse, TimeSpan.FromSeconds(5));
+                string mockAddress = "http://127.0.0.1:5001";
+
+                var cts = new CancellationTokenSource();
+                using (var client = new IpfsClient(new Uri(mockAddress), new HttpClient(mockHttpMessageHandler)))
+                {                    
+                    var task = client.Object.Put(new MerkleNode(), cts.Token);                    
+                    cts.Cancel();
+                    task.Wait();
+                    throw new Exception("The operation was not cancelled");
+                }
+            }
+            catch (AggregateException ex) when (ex.InnerException is TaskCanceledException)
+            {
+                Console.WriteLine("The operation has been canceled properly");
+            }
         }
     }
 }
