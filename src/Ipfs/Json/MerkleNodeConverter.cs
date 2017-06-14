@@ -47,7 +47,7 @@ namespace Ipfs.Json
                     else if (String.Equals(propertyName, "Size"))
                     {
                         reader.Read();
-                        merkleNode.Size = serializer.Deserialize<int?>(reader);
+                        merkleNode.Size = serializer.Deserialize<long?>(reader);
                     }
                 }
             }

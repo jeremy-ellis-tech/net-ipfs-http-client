@@ -40,6 +40,26 @@ CLI arguments are required method parameters and CLI options are optional method
         var peers = await ipfs.Swarm.Peers();
         await ipfs.Swarm.Disconnect(peers);
     }
+    
+### Cancellation support
+
+    try
+    {
+        var cts = new CancellationTokenSource(1000);
+        
+        using (var httpClient = new HttpClient() { Timeout = Timeout.InfiniteTimeSpan })
+        using (var ipfsClient = new IpfsClient(new Uri("http://127.0.0.1:5001"), httpClient))
+        {
+            //The CancellationTokenSource will cancel the task after 1 second
+            //Simulate a 2 second delay for this example to ensure the task gets cancelled
+            await Task.Delay(2000);
+            var result = await ipfsClient.Cat("QmPb8TjUbiRm1M9pvz8QW14PfBjkQyRitnJCZ95oRTRYBt", cts.Token);
+        }
+    }
+    catch (TaskCanceledException)
+    {
+        Console.WriteLine("The request was canceled");                
+    }
 
 ## Contributions
 Contributions are very welcome. Create a feature branch off `develop`, make your changes, and raise a pull request back to `develop`. Unit tests encouraged.

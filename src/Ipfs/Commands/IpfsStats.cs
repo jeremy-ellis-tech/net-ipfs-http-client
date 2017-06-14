@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -19,8 +20,9 @@ namespace Ipfs.Commands
         /// <param name="proto">specify a protocol to print bandwidth for</param>
         /// <param name="poll">print bandwidth at an interval</param>
         /// <param name="interval">time interval to wait between updating output</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<Json.IpfsStatsBw> Bw(string peer = null, string proto = null, bool poll = false, string interval = null)
+        public async Task<Json.IpfsStatsBw> Bw(string peer = null, string proto = null, bool poll = false, string interval = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -44,7 +46,7 @@ namespace Ipfs.Commands
                 flags.Add("interval", interval);
             }
 
-            HttpContent content = await ExecuteGetAsync("bw", flags);
+            HttpContent content = await ExecuteGetAsync("bw", flags, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 

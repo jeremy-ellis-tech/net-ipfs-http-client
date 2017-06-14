@@ -3,6 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -15,10 +16,11 @@ namespace Ipfs.Commands
         /// <summary>
         /// Show a list of IPFS Tour topics
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>Stream to tour topcs</returns>
-        public async Task<Stream> List()
+        public async Task<Stream> List(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("list");
+            HttpContent content = await ExecuteGetAsync("list", cancellationToken);
 
             return await content.ReadAsStreamAsync();
         }
@@ -26,10 +28,11 @@ namespace Ipfs.Commands
         /// <summary>
         /// Show the next IPFS Tour topic
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>Next tour topic</returns>
-        public async Task<Stream> Next()
+        public async Task<Stream> Next(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("next");
+            HttpContent content = await ExecuteGetAsync("next", cancellationToken);
 
             return await content.ReadAsStreamAsync();
         }
@@ -37,9 +40,10 @@ namespace Ipfs.Commands
         /// <summary>
         /// Restart the IPFS Tour
         /// </summary>
-        public async Task Restart()
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
+        public async Task Restart(CancellationToken cancellationToken = default(CancellationToken))
         {
-            await ExecuteGetAsync("restart");
+            await ExecuteGetAsync("restart", cancellationToken);
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Ipfs.Commands
@@ -18,10 +19,11 @@ namespace Ipfs.Commands
         /// 
         /// ipfs swarm addrs lists all addresses this node is aware of.
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>all addresses this node is aware of</returns>
-        public async Task<IEnumerable<IpfsPeer>> Addrs()
+        public async Task<IEnumerable<IpfsPeer>> Addrs(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("addrs");
+            HttpContent content = await ExecuteGetAsync("addrs", cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -44,10 +46,11 @@ namespace Ipfs.Commands
         /// ipfs swarm connect /ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ
         /// </summary>
         /// <param name="address">address of peer to connect to</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Connect(string address)
+        public async Task<HttpContent> Connect(string address, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync("connect", address);
+            return await ExecuteGetAsync("connect", address, cancellationToken);
         }
 
         /// <summary>
@@ -59,10 +62,11 @@ namespace Ipfs.Commands
         /// ipfs swarm disconnect /ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ
         /// </summary>
         /// <param name="multiAddress">address of peer to disconnect from</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>'disconnect <address> successs' on success</returns>
-        public async Task<IpfsPeerConnectionStatus> Disconnect(MultiAddress multiAddress)
+        public async Task<IpfsPeerConnectionStatus> Disconnect(MultiAddress multiAddress, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var ret = await Disconnect(ToEnumerable(multiAddress));
+            var ret = await Disconnect(ToEnumerable(multiAddress), cancellationToken);
             return ret.First();
         }
 
@@ -75,10 +79,11 @@ namespace Ipfs.Commands
         /// ipfs swarm disconnect /ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ
         /// </summary>
         /// <param name="multiAddress">address of peer to disconnect from</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>'disconnect <address> successs' on success</returns>
-        public async Task<IpfsPeerConnectionStatus> Disconnect(string multiAddress)
+        public async Task<IpfsPeerConnectionStatus> Disconnect(string multiAddress, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var ret = await Disconnect(ToEnumerable(multiAddress));
+            var ret = await Disconnect(ToEnumerable(multiAddress), cancellationToken);
             return ret.First();
         }
 
@@ -91,10 +96,11 @@ namespace Ipfs.Commands
         /// ipfs swarm disconnect /ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ
         /// </summary>
         /// <param name="multiAddresses">addresses of peers to disconnect from</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>'disconnect <address> successs' on success</returns>
-        public async Task<ICollection<IpfsPeerConnectionStatus>> Disconnect(IEnumerable<MultiAddress> multiAddresses)
+        public async Task<ICollection<IpfsPeerConnectionStatus>> Disconnect(IEnumerable<MultiAddress> multiAddresses, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await Disconnect(multiAddresses.Select(x=>x.ToString()));
+            return await Disconnect(multiAddresses.Select(x=>x.ToString()), cancellationToken);
         }
 
         /// <summary>
@@ -106,10 +112,11 @@ namespace Ipfs.Commands
         /// ipfs swarm disconnect /ip4/104.131.131.82/tcp/4001/ipfs/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ
         /// </summary>
         /// <param name="multiAddress">address of peer to disconnect from</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>'disconnect <address> successs' on success</returns>
-        public async Task<ICollection<IpfsPeerConnectionStatus>> Disconnect(IEnumerable<string> multiAddresses)
+        public async Task<ICollection<IpfsPeerConnectionStatus>> Disconnect(IEnumerable<string> multiAddresses, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("disconnect", multiAddresses, null);
+            HttpContent content = await ExecuteGetAsync("disconnect", multiAddresses, null, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -129,10 +136,11 @@ namespace Ipfs.Commands
         /// List peers with open connections
         /// ipfs swarm peers lists the set of peers this node is connected to.
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<ICollection<MultiAddress>> Peers()
+        public async Task<ICollection<MultiAddress>> Peers(CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("peers");
+            HttpContent content = await ExecuteGetAsync("peers", cancellationToken);
             string json = await content.ReadAsStringAsync();
             var swarmPeers = _jsonSerializer.Deserialize<IDictionary<string, IList<string>>>(json);
             return swarmPeers

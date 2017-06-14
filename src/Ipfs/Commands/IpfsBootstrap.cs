@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -27,8 +28,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="peers">A peer to add to the bootstrap list (in the format '<multiaddr>/<peerID>')</param>
         /// <param name="default">add default bootstrap nodes</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Add(IEnumerable<string> peers, bool @default = false)
+        public async Task<HttpContent> Add(IEnumerable<string> peers, bool @default = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             Dictionary<string, string> args = new Dictionary<string, string>();
 
@@ -37,17 +39,18 @@ namespace Ipfs.Commands
                 args.Add("default", "true");
             }
 
-            return await ExecuteGetAsync("add", peers, args);
+            return await ExecuteGetAsync("add", peers, args, cancellationToken);
         }
 
         /// <summary>
         /// Show peers in the bootstrap list
         /// Peers are output in the format '<multiaddr>/<peerID>'.
         /// </summary>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> List()
+        public async Task<HttpContent> List(CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await ExecuteGetAsync("list");
+            return await ExecuteGetAsync("list", cancellationToken);
         }
 
         /// <summary>
@@ -63,8 +66,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="peers">A peer to add to the bootstrap list (in the format '<multiaddr>/<peerID>')</param>
         /// <param name="all">Remove all bootstrap peers.</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Rm(IEnumerable<string> peers, bool all = false)
+        public async Task<HttpContent> Rm(IEnumerable<string> peers, bool all = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -73,7 +77,7 @@ namespace Ipfs.Commands
                 flags.Add("all", "true");
             }
 
-            return await ExecuteGetAsync("rm", peers, flags);
+            return await ExecuteGetAsync("rm", peers, flags, cancellationToken);
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -20,8 +21,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="ipfsPath">Path to object(s) to be pinned</param>
         /// <param name="recursive">Recursively pin the object linked to by the specified object(s)</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<IEnumerable<MultiHash>> Add(string ipfsPath, bool recursive = false)
+        public async Task<IEnumerable<MultiHash>> Add(string ipfsPath, bool recursive = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -30,7 +32,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            HttpContent content = await ExecuteGetAsync("add", ipfsPath, flags);
+            HttpContent content = await ExecuteGetAsync("add", ipfsPath, flags, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 
@@ -50,8 +52,9 @@ namespace Ipfs.Commands
         ///  or recursively pinned are not included in the list.
         /// </summary>
         /// <param name="type">The type of pinned keys to list. Can be "direct", "indirect", "recursive", or "all". Defaults to "direct"</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Ls(IpfsType? type = null)
+        public async Task<HttpContent> Ls(IpfsType? type = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -80,7 +83,7 @@ namespace Ipfs.Commands
                 flags.Add("type", typeValue);
             }
 
-            return await ExecuteGetAsync("ls", flags);
+            return await ExecuteGetAsync("ls", flags, cancellationToken);
         }
 
         /// <summary>
@@ -90,8 +93,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="ipfsPath">Path to object(s) to be unpinned</param>
         /// <param name="recursive">Recursively unpin the object linked to by the specified object(s)</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns></returns>
-        public async Task<HttpContent> Rm(string ipfsPath, bool recursive = false)
+        public async Task<HttpContent> Rm(string ipfsPath, bool recursive = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -100,7 +104,7 @@ namespace Ipfs.Commands
                 flags.Add("recursive", "true");
             }
 
-            return await ExecuteGetAsync("rm", ipfsPath, flags);
+            return await ExecuteGetAsync("rm", ipfsPath, flags, cancellationToken);
         }
     }
 }

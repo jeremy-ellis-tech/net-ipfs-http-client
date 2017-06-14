@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -21,8 +22,9 @@ namespace Ipfs.Commands
         /// order to reclaim hard disk space.
         /// </summary>
         /// <param name="quiet">Write minimal output</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>An enumerable of multihashes that were cleared. The enumerable will be empty if no entries were removed</returns>
-        public async Task<IEnumerable<MultiHash>> GC(bool quiet = false)
+        public async Task<IEnumerable<MultiHash>> GC(bool quiet = false, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -31,7 +33,7 @@ namespace Ipfs.Commands
                 flags.Add("quiet", "true");
             }
 
-            HttpContent content = await ExecuteGetAsync("gc", flags);
+            HttpContent content = await ExecuteGetAsync("gc", flags, cancellationToken);
 
             string json = await content.ReadAsStringAsync();
 

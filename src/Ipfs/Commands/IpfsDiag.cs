@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Ipfs.Json;
+using System.Threading;
 
 namespace Ipfs.Commands
 {
@@ -46,8 +47,9 @@ namespace Ipfs.Commands
         /// </summary>
         /// <param name="timeout">diagnostic timeout duration</param>
         /// <param name="vis">output vis. one of: d3, dot. Default d3</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
         /// <returns>UTF-8 encoded byte array of text, d3 or dot format of network graph, depending on vis parameter</returns>
-        public async Task<byte[]> Net(string timeout = null, IpfsVis? vis = null)
+        public async Task<byte[]> Net(string timeout = null, IpfsVis? vis = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             var flags = new Dictionary<string, string>();
 
@@ -75,7 +77,7 @@ namespace Ipfs.Commands
                 flags.Add("vis", visValue);
             }
 
-            HttpContent content = await ExecuteGetAsync("net", flags);
+            HttpContent content = await ExecuteGetAsync("net", flags, cancellationToken);
 
             return await content.ReadAsByteArrayAsync();
         }
