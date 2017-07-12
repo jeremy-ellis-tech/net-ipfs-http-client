@@ -1,5 +1,8 @@
 # net-ipfs-api v0.3.11 beta
-The .NET portable class library (PCL) for the InterPlanetary File System (IPFS) API. _Currently a work in progress_
+
+> ![](https://ipfs.io/ipfs/QmQJ68PFMDdAsgCZvA1UVzzn18asVcf7HVvCDgpjiSCAse)
+
+> The .NET portable class library (PCL) for the InterPlanetary File System (IPFS) API. __Currently a work in progress__
 
 This library should be easy to use if you're familiar with the IPFS CLI. Top level commands (eg. `ipfs cat`, `ipfs add`) are methods in `IpfsClient`. Subcommands are methods in the IPFS client's properties named after the subcommands.
 
