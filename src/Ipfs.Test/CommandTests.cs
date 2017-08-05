@@ -198,5 +198,16 @@ namespace Ipfs.Test
                 Console.WriteLine("The operation has been canceled properly");
             }
         }
+
+        [TestMethod]
+        public void ShouldBeAbleToListSwarmPeers()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.Swarm.Peers();
+                task.Wait();
+                var peers = task.Result;               
+            }
+        }
     }
 }
