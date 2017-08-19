@@ -36,7 +36,7 @@ You can install it with the NuGet package manager:
 
       Stream outputStream = await ipfs.Cat(node.Hash);
 
-      using(StreamReader sr = new StreamReader(outputStream));
+      using(StreamReader sr = new StreamReader(outputStream))
       {
         string contents = sr.ReadToEnd();
 
