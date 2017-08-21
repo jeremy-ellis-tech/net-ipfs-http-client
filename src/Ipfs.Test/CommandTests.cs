@@ -209,5 +209,82 @@ namespace Ipfs.Test
                 var peers = task.Result;               
             }
         }
+
+        [TestMethod]
+        public void ShouldBeAbleToListAddresses()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.Swarm.Addrs();
+                task.Wait();
+                var addresses = task.Result;
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToGetBandwithInformation()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.Stats.Bw();
+                task.Wait();
+                var information = task.Result;
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToListObjectPinnedToLocalStorage()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.Pin.Ls();
+                task.Wait();
+                var objects = task.Result;
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToGetBitSwapStats()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.BitSwap.Stat();
+                task.Wait();
+                var stats = task.Result;
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToGetBitSwapWantList()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.BitSwap.Wantlist();
+                task.Wait();
+                var wantList = task.Result;
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToGetVersion()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.Version();
+                task.Wait();
+                var version = task.Result;
+            }
+        }
+
+        [TestMethod]
+        public void ShouldBeAbleToListLocalReferences()
+        {
+            using (var client = new IpfsClient())
+            {
+                var task = client.Refs.Local();
+                task.Wait();
+                var references = task.Result;                
+            }
+        }
     }
 }
