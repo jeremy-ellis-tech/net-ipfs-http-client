@@ -1,5 +1,8 @@
 # net-ipfs-api v0.3.11 beta
-The .NET portable class library (PCL) for the InterPlanetary File System (IPFS) API. _Currently a work in progress_
+
+> ![](https://ipfs.io/ipfs/QmQJ68PFMDdAsgCZvA1UVzzn18asVcf7HVvCDgpjiSCAse)
+
+> The .NET portable class library (PCL) for the InterPlanetary File System (IPFS) API. __Currently a work in progress__
 
 This library should be easy to use if you're familiar with the IPFS CLI. Top level commands (eg. `ipfs cat`, `ipfs add`) are methods in `IpfsClient`. Subcommands are methods in the IPFS client's properties named after the subcommands.
 
@@ -8,6 +11,14 @@ ie. `ipfs swarm peers` becomes `ipfs.Swarm.Peers()` and `ipfs add <file>` become
 The only exception is if a valid 'top level' command has subcommands, since C# can't have methods and properties with the same name. ie. `ipfs config` and `ipfs config edit` become `ipfs.ConfigCommand()` and `ipfs.Config.Edit()`.
 
 CLI arguments are required method parameters and CLI options are optional method parameters.
+
+## NuGet
+This library is available on <a href="https://www.nuget.org/packages/net-ipfs-api/0.3.11" target="_blank">NuGet</a>.
+
+You can install it with the NuGet package manager:
+
+    PM> Install-Package net-ipfs-api
+    
 
 ## Examples
 
