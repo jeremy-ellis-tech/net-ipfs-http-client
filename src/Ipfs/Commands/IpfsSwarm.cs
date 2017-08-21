@@ -1,4 +1,6 @@
 ﻿using Ipfs.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -142,10 +144,12 @@ namespace Ipfs.Commands
         {
             HttpContent content = await ExecuteGetAsync("peers", cancellationToken);
             string json = await content.ReadAsStringAsync();
-            var swarmPeers = _jsonSerializer.Deserialize<IDictionary<string, IList<string>>>(json);
-            return swarmPeers
-                .SelectMany(x => x.Value)
-                .Select(x => new MultiAddress(x)).ToArray();
+                       
+            dynamic results = JObject.Parse(json);
+            IEnumerable<dynamic> peers = results.Peers;
+            return peers.Select(p => p.Addr)
+                        .Select(a => new MultiAddress(a.ToString()))
+                        .ToArray();
         }
     }
 }
