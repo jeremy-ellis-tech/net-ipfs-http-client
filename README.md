@@ -13,7 +13,7 @@ The only exception is if a valid 'top level' command has subcommands, since C# c
 CLI arguments are required method parameters and CLI options are optional method parameters.
 
 ## NuGet
-This library is available on <a href="https://www.nuget.org/packages/net-ipfs-api/0.3.11" target="_blank">NuGet</a>.
+This library is available on [NuGet](https://www.nuget.org/packages/net-ipfs-api).
 
 You can install it with the NuGet package manager:
 
