@@ -1,0 +1,8 @@
+# Contributions
+Contributions are very welcome.
+
+## Pull Requests
+Create a feature branch off `develop`, make your changes, and raise a pull request back to `develop`. Unit tests encouraged.
+
+## Issues
+Make sure to include any relevant version numbers (`ipfs --version`, git commit # if built from source, etc.)

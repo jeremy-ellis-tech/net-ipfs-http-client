@@ -72,11 +72,8 @@ You can install it with the NuGet package manager:
         Console.WriteLine("The request was canceled");                
     }
 
-## Contributions
-Contributions are very welcome. Create a feature branch off `develop`, make your changes, and raise a pull request back to `develop`. Unit tests encouraged.
-
 ## License
 MIT license, see LICENSE for details
 
 ## Thanks
-Thanks to [@slothbag](https://github.com/slothbag) for spotting/fixing various bugs :)
+Thanks to [@slothbag](https://github.com/slothbag) & [@timothyparez](https://github.com/timothyparez)
