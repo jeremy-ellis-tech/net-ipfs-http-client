@@ -28,7 +28,7 @@ CLI arguments are required method parameters and CLI options are optional method
 
       Stream outputStream = await ipfs.Cat(node.Hash);
 
-      using(StreamReader sr = new StreamReader(outputStream));
+      using(StreamReader sr = new StreamReader(outputStream))
       {
         string contents = sr.ReadToEnd();
 
