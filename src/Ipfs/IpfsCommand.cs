@@ -3,6 +3,7 @@ using Ipfs.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -33,7 +34,7 @@ namespace Ipfs
         {
             return await ExecuteGetAsync(methodName, ToEnumerable(arg), null, cancellationToken);
         }
-
+         
         protected async Task<HttpContent> ExecuteGetAsync(string methodName, IDictionary<string,string> flags, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await ExecuteGetAsync(methodName, (IEnumerable<string>)null, flags, cancellationToken);
@@ -82,11 +83,29 @@ namespace Ipfs
         {
             Debug.WriteLine(String.Format("IpfsCommand.ExecuteAsync: {0} {1}", request.Method.ToString(), request.RequestUri.ToString()));
 
-            HttpResponseMessage response = await _httpClient.SendAsync(request, cancellationToken);
-
+            HttpResponseMessage response = await _httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead,  cancellationToken);
             response.EnsureSuccessStatusCode();
 
             return response.Content;
+        }
+
+        protected async Task<Stream> ExecuteGetStreamAsync(string methodName, string arg, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await ExecuteGetStreamAsync(methodName, ToEnumerable(arg), null, cancellationToken);
+        }
+
+        protected async Task<Stream> ExecuteGetStreamAsync(string methodName, IEnumerable<string> args, IDictionary<string, string> flags, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            Uri commandUri = GetSubCommandUri(methodName, args, flags);
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, commandUri);
+
+            return await ExecuteGetStreamAsync(request, cancellationToken);
+        }
+
+        protected async Task<Stream> ExecuteGetStreamAsync(HttpRequestMessage request, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await _httpClient.GetStreamAsync(request.RequestUri);
         }
 
         private Uri GetSubCommandUri(string methodName, IEnumerable<string> args, IDictionary<string, string> flags)
