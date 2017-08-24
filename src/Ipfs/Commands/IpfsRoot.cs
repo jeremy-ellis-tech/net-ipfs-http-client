@@ -73,8 +73,7 @@ namespace Ipfs.Commands
         /// <returns>A stream to your file</returns>
         public async Task<Stream> Cat(string ipfsPath, CancellationToken cancellationToken = default(CancellationToken))
         {
-            HttpContent content = await ExecuteGetAsync("cat", ipfsPath, cancellationToken);
-            return await content.ReadAsStreamAsync();
+            return await ExecuteGetStreamAsync("cat", ipfsPath, cancellationToken);            
         }
 
         /// <summary>
