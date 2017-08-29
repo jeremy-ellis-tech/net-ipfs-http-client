@@ -3,8 +3,11 @@ using Ipfs.Test.Mocks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -284,6 +287,49 @@ namespace Ipfs.Test
                 var task = client.Refs.Local();
                 task.Wait();
                 var references = task.Result;                
+            }
+        }
+
+        [TestMethod]
+        public async Task ShouldBeAbleToAddDataFromArray()
+        {
+            using (var client = new IpfsClient())
+            {
+                var originalText = DateTime.Now.ToLongTimeString();
+                var data = Encoding.ASCII.GetBytes(originalText);
+                var result = await client.Add("MyHello", data);                
+                var hash = result.ToString();
+                                                
+                using (var stream = await client.Cat(hash))
+                using (var reader = new StreamReader(stream))
+                {
+                    var text = reader.ReadToEnd();
+                    Assert.AreEqual(text, originalText);
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task ShouldBeAbleToAddDataFromStream()
+        {
+            using (var client = new IpfsClient())
+            using (var stream = new MemoryStream())
+            {
+                var originalText = DateTime.Now.ToLongTimeString();
+
+                var data = Encoding.ASCII.GetBytes(originalText);
+                stream.Write(data, 0, data.Length);
+                stream.Position = 0;
+
+                var result = await client.Add("MyHello", stream);
+                var hash = result.ToString();
+
+                using (var catStream = await client.Cat(hash))
+                using (var reader = new StreamReader(catStream))
+                {
+                    var text = reader.ReadToEnd();
+                    Assert.AreEqual(text, originalText);
+                }
             }
         }
     }

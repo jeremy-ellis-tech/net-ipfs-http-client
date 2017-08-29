@@ -415,6 +415,42 @@ namespace Ipfs
         }
 
         /// <summary>
+        /// Add an object to ipfs.
+        /// Adds the contents of the stream to ipfs
+        /// </summary>
+        /// <param name="name">A name assigned to the object</param>
+        /// <param name="stream">The stream containing the data to be added</param>
+        /// <param name="quiet">Write minimal output</param>
+        /// <param name="trickle">Use trickle-dag format for dag generation</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
+        /// <returns></returns>
+        public async Task<MerkleNode> Add(string name, Stream stream, bool quiet = false, bool trickle = false, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            using (var ipfsStream = new IpfsStream(name, stream))
+            {
+                return await Add(ipfsStream, false, quiet, false, trickle, cancellationToken);
+            }
+        }
+
+        /// <summary>
+        /// Add an object to ipfs.
+        /// Adds the contents of the byte[] to ipfs
+        /// </summary>
+        /// <param name="name">A name assigned to the object</param>
+        /// <param name="data">The data to be added</param>
+        /// <param name="quiet">Write minimal output</param>
+        /// <param name="trickle">Use trickle-dag format for dag generation</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
+        /// <returns></returns>
+        public async Task<MerkleNode> Add(string name, byte[] data, bool quiet = false, bool trickle = false, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            using (var stream = new MemoryStream(data))
+            {
+                return await Add(name, stream, quiet, trickle, cancellationToken);
+            }
+        }
+
+        /// <summary>
         /// Show IPFS object data
         /// Retrieves the object named by <ipfs-path> and outputs the data
         /// it contains.
