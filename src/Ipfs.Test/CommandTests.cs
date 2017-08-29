@@ -332,5 +332,41 @@ namespace Ipfs.Test
                 }
             }
         }
+
+        [TestMethod]
+        public async Task ShouldBeAbleToAddTextUsingDefaultEncoding()
+        {
+            using (var client = new IpfsClient())
+            {
+                var originalText = DateTime.Now.ToLongTimeString();
+                var result = await client.Add("MyHello", originalText);
+                var hash = result.ToString();
+
+                using (var catStream = await client.Cat(hash))
+                using (var reader = new StreamReader(catStream))
+                {
+                    var text = reader.ReadToEnd();
+                    Assert.AreEqual(text, originalText);
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task ShouldBeAbleToAddTextUsingASCIIEncoding()
+        {
+            using (var client = new IpfsClient())
+            {
+                var originalText = DateTime.Now.ToLongTimeString();
+                var result = await client.Add("MyHello", originalText, Encoding.ASCII);
+                var hash = result.ToString();
+
+                using (var catStream = await client.Cat(hash))
+                using (var reader = new StreamReader(catStream))
+                {
+                    var text = reader.ReadToEnd();
+                    Assert.AreEqual(text, originalText);
+                }
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -450,6 +451,37 @@ namespace Ipfs
             }
         }
 
+        /// <summary>
+        /// Add an object, in this case a string, to ipfs.
+        /// The string will be UTF8 encoded
+        /// </summary>
+        /// <param name="name">A name assigned to the object</param>
+        /// <param name="text">The text to be added</param>        
+        /// <param name="quiet">Write minimal output</param>
+        /// <param name="trickle">Use trickle-dag format for dag generation</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
+        /// <returns></returns>
+        public async Task<MerkleNode> Add(string name, string text, bool quiet = false, bool trickle = false, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await Add(name, text, Encoding.UTF8, quiet, trickle, cancellationToken);
+        }
+
+        /// <summary>
+        /// Add an object, in this case a string, to ipfs.
+        /// </summary>
+        /// <param name="name">A name assigned to the object</param>
+        /// <param name="text">The text to be added</param>
+        /// <param name="encoding">The encoding to be used in order to convert the string to bytes</param>
+        /// <param name="quiet">Write minimal output</param>
+        /// <param name="trickle">Use trickle-dag format for dag generation</param>
+        /// <param name="cancellationToken">Token allowing you to cancel the request</param>
+        /// <returns></returns>
+        public async Task<MerkleNode> Add(string name, string text, Encoding encoding, bool quiet = false, bool trickle = false, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var data = encoding.GetBytes(text);
+            return await Add(name, data, quiet, trickle, cancellationToken);
+        }
+        
         /// <summary>
         /// Show IPFS object data
         /// Retrieves the object named by <ipfs-path> and outputs the data
