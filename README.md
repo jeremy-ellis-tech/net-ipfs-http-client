@@ -13,7 +13,7 @@ The only exception is if a valid 'top level' command has subcommands, since C# c
 CLI arguments are required method parameters and CLI options are optional method parameters.
 
 ## NuGet
-This library is available on <a href="https://www.nuget.org/packages/net-ipfs-api/0.3.11" target="_blank">NuGet</a>.
+This library is available on [NuGet](https://www.nuget.org/packages/net-ipfs-api).
 
 You can install it with the NuGet package manager:
 
@@ -36,7 +36,7 @@ You can install it with the NuGet package manager:
 
       Stream outputStream = await ipfs.Cat(node.Hash);
 
-      using(StreamReader sr = new StreamReader(outputStream));
+      using(StreamReader sr = new StreamReader(outputStream))
       {
         string contents = sr.ReadToEnd();
 
@@ -72,11 +72,8 @@ You can install it with the NuGet package manager:
         Console.WriteLine("The request was canceled");                
     }
 
-## Contributions
-Contributions are very welcome. Create a feature branch off `develop`, make your changes, and raise a pull request back to `develop`. Unit tests encouraged.
-
 ## License
 MIT license, see LICENSE for details
 
 ## Thanks
-Thanks to [@slothbag](https://github.com/slothbag) for spotting/fixing various bugs :)
+Thanks to [@slothbag](https://github.com/slothbag) & [@timothyparez](https://github.com/timothyparez)
